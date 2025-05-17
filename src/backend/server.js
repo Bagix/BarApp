@@ -27,13 +27,13 @@ app.get('/api/get-items', async (req, res) => {
   res.json(response)
 })
 
-app.delete('/api/delete', async (req, res) => {
-  const response = await remove(req.body)
+app.post('/api/add', async (req, res) => {
+  const response = await add(req.body)
   res.json(response)
 })
 
-app.post('/api/add', async (req, res) => {
-  const response = await add(req.body)
+app.delete('/api/delete', async (req, res) => {
+  const response = await remove(req.body)
   res.json(response)
 })
 
