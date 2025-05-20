@@ -49,6 +49,11 @@
     --color-text: var(--vt-c-text-dark-2);
   }
 } */
+p,
+ul {
+  padding: 0;
+  margin: 0;
+}
 
 *::before,
 *::after {

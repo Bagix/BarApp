@@ -4,10 +4,13 @@ export interface IDrink extends INewDrink {
 
 export interface INewDrinkRaw {
   name: string
+  baseAlcohol: string
   description: string
   preparation: string
   ingredients: string
   tools: string
+  taste?: string
+  color?: string
 }
 
 export interface INewDrink {
@@ -16,6 +19,8 @@ export interface INewDrink {
   preparation: string
   ingredients: IIngredient[]
   tools: string[]
+  taste?: string
+  color?: string
 }
 
 export interface IIngredient {

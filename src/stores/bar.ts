@@ -18,7 +18,7 @@ export const useBarStore = defineStore('bar', () => {
   const pagination = ref(0)
   const isLoading = ref<boolean>(false)
 
-  async function getAllDrinks(limit: number = 1): Promise<void> {
+  async function getAllDrinks(limit: number = 5): Promise<void> {
     try {
       const items = await Connector.getItems(pagination.value, limit)
       pagination.value += limit
@@ -50,6 +50,7 @@ export const useBarStore = defineStore('bar', () => {
 
       const preparedData = {
         name: data.name,
+        baseAlcohol: data.baseAlcohol,
         description: data.description,
         preparation: data.preparation,
         ingredients,
@@ -60,9 +61,7 @@ export const useBarStore = defineStore('bar', () => {
     } catch (e) {
       console.error(`There was a problem in addDrink(): ${e}`)
     } finally {
-      setTimeout(() => {
-        isLoading.value = false
-      }, 3000)
+      isLoading.value = false
     }
   }
 
