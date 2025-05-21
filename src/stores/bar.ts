@@ -65,5 +65,22 @@ export const useBarStore = defineStore('bar', () => {
     }
   }
 
-  return { drinksList, isLoading, getAllDrinks, addDrink }
+  async function deleteItem(id: string) {
+    try {
+      isLoading.value = true
+      const response = await Connector.deleteItem(id)
+      console.log('elo---asad', response)
+
+      if (response.acknowledged) {
+        const indextoRemove = drinksList.value.findIndex((drink) => drink._id === id)
+        drinksList.value.splice(indextoRemove, 1)
+      }
+    } catch (e) {
+      console.error(`There was a problem in deleteItem(): ${e}`)
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  return { drinksList, isLoading, getAllDrinks, addDrink, deleteItem }
 })

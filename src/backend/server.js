@@ -1,5 +1,5 @@
 import Express from 'express'
-import { MongoClient } from 'mongodb'
+import { MongoClient, ObjectId } from 'mongodb'
 import cors from 'cors'
 import bodyParser from 'body-parser'
 
@@ -33,6 +33,7 @@ app.post('/api/add', async (req, res) => {
 })
 
 app.delete('/api/delete', async (req, res) => {
+  // console.log('kkkk--------', req.body)
   const response = await remove(req.body)
   res.json(response)
 })
@@ -62,7 +63,8 @@ async function add(data) {
 
 async function remove(data) {
   try {
-    const deletedItem = await collection.deleteMany(data)
+    const query = { _id: new ObjectId(`${data.id}`) }
+    const deletedItem = await collection.deleteOne(query)
     return deletedItem
   } catch (err) {
     console.error(`Something went wrong trying to delete the document: ${err}\n`)

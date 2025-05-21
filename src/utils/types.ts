@@ -32,3 +32,8 @@ export interface IInsertConfirmation {
   acknowledged: boolean
   insertedId: string
 }
+
+export interface IDeleteConfirmation {
+  acknowledged: boolean
+  insertedId: string
+}

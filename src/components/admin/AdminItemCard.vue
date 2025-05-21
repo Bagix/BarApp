@@ -1,14 +1,35 @@
 <script setup lang="ts">
 import ItemCard from '@/components/ItemCard.vue'
+import { useConfirm } from 'primevue/useconfirm'
+import { useBarStore } from '@/stores/bar'
+
+const store = useBarStore()
+const confirm = useConfirm()
 
 const props = defineProps(['drink'])
+const emit = defineEmits(['edit', 'delete'])
 
 function handleEdit() {
-  console.log('edit')
+  emit('edit')
+}
+
+async function deleteItem() {
+  await store.deleteItem(props.drink._id)
 }
 
 function handleDelete() {
-  console.log('delete')
+  confirm.require({
+    message: 'Czy na pewno chcesz usunać tego drinka?',
+    header: 'Powierdź usunięcie ',
+    accept: deleteItem,
+    acceptProps: {
+      severity: 'danger',
+      label: 'Tak',
+    },
+    rejectProps: {
+      label: 'Nie',
+    },
+  })
 }
 </script>
 

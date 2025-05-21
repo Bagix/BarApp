@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import AddItemForm from '@/components/admin/AddItemForm.vue'
-// import ItemCard from '@/components/ItemCard.vue'
+import ConfirmDialog from 'primevue/confirmdialog'
 import AdminItemCard from '@/components/admin/AdminItemCard.vue'
 import { useBarStore } from '@/stores/bar'
 import { storeToRefs } from 'pinia'
@@ -9,6 +9,12 @@ import { onMounted } from 'vue'
 const store = useBarStore()
 const { drinksList } = storeToRefs(store)
 
+function handleEdit() {}
+
+function handleDelete() {
+  console.log('delete')
+}
+
 onMounted(async () => {
   await store.getAllDrinks()
 })
@@ -16,9 +22,16 @@ onMounted(async () => {
 
 <template>
   <main class="container">
+    <ConfirmDialog />
     <AddItemForm />
     <div class="wrapper">
-      <AdminItemCard v-for="drink in drinksList" :key="drink._id" :drink="drink" />
+      <AdminItemCard
+        v-for="drink in drinksList"
+        :key="drink._id"
+        :drink="drink"
+        @edit="handleEdit"
+        @delete="handleDelete"
+      />
     </div>
   </main>
 </template>
@@ -41,15 +54,15 @@ onMounted(async () => {
 }
 
 .wrapper {
+  display: flex;
   margin-top: 32px;
   padding: 16px 0;
   width: 100%;
   gap: 24px;
-  display: flex;
-  flex-direction: column;
 
-  @media (min-width: 1024px) {
-    flex-direction: row;
+  @media (max-width: 1023px) {
+    align-items: center;
+    flex-direction: column;
   }
 }
 </style>
