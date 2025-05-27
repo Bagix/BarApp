@@ -4,67 +4,62 @@ import InputText from 'primevue/inputtext'
 import Textarea from 'primevue/textarea'
 import Select from 'primevue/select'
 import { useBarStore } from '@/stores/bar'
-import { colors, type INewDrinkRaw, flavors, baseAlcohols } from '@/utils/types'
+import { colors, flavors, baseAlcohols } from '@/utils/types'
 import { storeToRefs } from 'pinia'
 
 const store = useBarStore()
-const { isLoading } = storeToRefs(store)
-
-const formModel: INewDrinkRaw = {
-  name: '',
-  baseAlcohol: '',
-  description: '',
-  preparation: '',
-  ingredients: '',
-  tools: '',
-  taste: '',
-  color: '',
-}
+const { isLoading, drinkToEdit } = storeToRefs(store)
 
 async function handleSubmit(): Promise<void> {
-  await store.addDrink(formModel)
+  await store.editDrink()
 }
 </script>
 
 <template>
-  <form class="form" @submit.prevent="handleSubmit" :inert="isLoading">
+  <form v-if="drinkToEdit" class="form" @submit.prevent="handleSubmit" :inert="isLoading">
     <div class="column">
       <FloatLabel class="input-element" variant="on">
-        <InputText id="name" v-model="formModel.name" autocomplete="off" required />
+        <InputText id="name" v-model="drinkToEdit.name" autocomplete="off" required />
         <label for="name">Nazwa</label>
       </FloatLabel>
 
       <FloatLabel class="input-element" variant="on">
-        <InputText id="ingredients" v-model="formModel.ingredients" autocomplete="off" required />
+        <InputText id="ingredients" v-model="drinkToEdit.ingredients" autocomplete="off" required />
         <label for="ingredients">Składniki</label>
       </FloatLabel>
 
       <FloatLabel class="input-element" variant="on">
-        <InputText id="tools" v-model="formModel.tools" autocomplete="off" required />
+        <InputText id="tools" v-model="drinkToEdit.tools" autocomplete="off" required />
         <label for="tools">Przybory</label>
       </FloatLabel>
 
       <Select
-        v-model="formModel.baseAlcohol"
+        v-model="drinkToEdit.baseAlcohol"
         :options="baseAlcohols"
         placeholder="Alkohol bazowy"
+        checkmark
       />
 
-      <Select v-model="formModel.taste" :options="flavors" placeholder="Smak" />
+      <Select v-model="drinkToEdit.taste" :options="flavors" placeholder="Smak" checkmark />
 
-      <Select v-model="formModel.color" :options="colors" placeholder="Kolor" />
+      <Select v-model="drinkToEdit.color" :options="colors" placeholder="Kolor" checkmark />
     </div>
 
     <div class="column">
       <FloatLabel variant="on" class="textarea-element">
-        <Textarea id="description" v-model="formModel.description" style="resize: none" required />
+        <Textarea
+          id="description"
+          v-model="drinkToEdit.description"
+          style="resize: none"
+          required
+        />
         <label for="description">Opis</label>
       </FloatLabel>
 
       <FloatLabel variant="on" class="textarea-element">
         <Textarea
           id="preparation"
-          v-model="formModel.preparation"
+          v-model="drinkToEdit.preparation"
           autoresize
           style="resize: none"
           required

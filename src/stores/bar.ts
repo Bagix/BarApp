@@ -1,7 +1,7 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { Connector } from '@/repositories'
-import type { IDrink, INewDrinkRaw } from '@/utils/types'
+import type { IDrink, IEditDrink, INewDrinkRaw } from '@/utils/types'
 
 export const useCounterStore = defineStore('counter', () => {
   const count = ref(0)
@@ -17,6 +17,7 @@ export const useBarStore = defineStore('bar', () => {
   const drinksList = ref<Array<IDrink>>([])
   const pagination = ref(0)
   const isLoading = ref<boolean>(false)
+  const drinkToEdit = ref<IEditDrink>()
 
   async function getAllDrinks(limit: number = 5): Promise<void> {
     try {
@@ -31,28 +32,17 @@ export const useBarStore = defineStore('bar', () => {
   async function addDrink(data: INewDrinkRaw): Promise<void> {
     try {
       isLoading.value = true
-      console.log('test', isLoading.value)
-      const ingredients = data.ingredients
-        .trim()
-        .split(',')
-        .map((ingredient) => {
-          const ingredientParts = ingredient.trim().split(' ')
-          return {
-            amount: ingredientParts[0],
-            type: ingredientParts[1],
-          }
-        })
 
-      const tools = data.tools
-        .trim()
-        .split(',')
-        .map((el) => el.trim())
+      const ingredients = prepareIngredients(data.ingredients)
+      const tools = prepareTools(data.tools)
 
       const preparedData = {
         name: data.name,
         baseAlcohol: data.baseAlcohol,
         description: data.description,
         preparation: data.preparation,
+        color: data.color,
+        taste: data.taste,
         ingredients,
         tools,
       }
@@ -82,5 +72,84 @@ export const useBarStore = defineStore('bar', () => {
     }
   }
 
-  return { drinksList, isLoading, getAllDrinks, addDrink, deleteItem }
+  async function editDrink() {
+    try {
+      if (!drinkToEdit.value) {
+        return
+      }
+
+      isLoading.value = true
+
+      const ingredients = prepareIngredients(drinkToEdit.value.ingredients)
+      const tools = prepareTools(drinkToEdit.value.tools)
+
+      const preparedData = {
+        id: drinkToEdit.value._id,
+        name: drinkToEdit.value.name,
+        baseAlcohol: drinkToEdit.value.baseAlcohol,
+        description: drinkToEdit.value.description,
+        preparation: drinkToEdit.value.preparation,
+        color: drinkToEdit.value.color,
+        taste: drinkToEdit.value.taste,
+        ingredients,
+        tools,
+      }
+
+      await Connector.editItem(preparedData)
+    } catch (e) {
+      console.error(`There was a problem in editDrink(): ${e}`)
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  function setDrinkToEdit(id: string) {
+    const selectedDrink = drinksList.value.find((el) => el._id === id)
+
+    const tools = selectedDrink!.tools.join(', ')
+    const ingredients = selectedDrink!.ingredients.map((el) => `${el.amount} ${el.type}`).join(', ')
+
+    drinkToEdit.value = {
+      _id: selectedDrink!._id,
+      name: selectedDrink!.name,
+      baseAlcohol: selectedDrink!.baseAlcohol,
+      description: selectedDrink!.description,
+      preparation: selectedDrink!.preparation,
+      ingredients,
+      tools,
+      taste: selectedDrink!.taste,
+      color: selectedDrink!.color,
+    }
+  }
+
+  function prepareTools(rawTools: string) {
+    return rawTools
+      .trim()
+      .split(',')
+      .map((el) => el.trim())
+  }
+
+  function prepareIngredients(rawIngredients: string) {
+    return rawIngredients
+      .trim()
+      .split(',')
+      .map((ingredient) => {
+        const ingredientParts = ingredient.trim().split(' ')
+        return {
+          amount: ingredientParts[0],
+          type: ingredientParts[1],
+        }
+      })
+  }
+
+  return {
+    drinksList,
+    isLoading,
+    drinkToEdit,
+    getAllDrinks,
+    addDrink,
+    deleteItem,
+    setDrinkToEdit,
+    editDrink,
+  }
 })

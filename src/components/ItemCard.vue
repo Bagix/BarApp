@@ -13,6 +13,8 @@ const ingredients = props.drink.ingredients
     </template>
     <template #content>
       <p class="description">{{ props.drink.description }}</p>
+      <p class="description">{{ props.drink.taste }}</p>
+      <p class="description">{{ props.drink.color }}</p>
       <div class="tools">
         <span>Przybory:</span>
         <ul class="tools-list">

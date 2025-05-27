@@ -32,6 +32,11 @@ app.post('/api/add', async (req, res) => {
   res.json(response)
 })
 
+app.put('/api/edit', async (req, res) => {
+  const response = await edit(req.body)
+  res.json(response)
+})
+
 app.delete('/api/delete', async (req, res) => {
   // console.log('kkkk--------', req.body)
   const response = await remove(req.body)
@@ -58,6 +63,21 @@ async function add(data) {
     return insertedItem
   } catch (err) {
     console.error(`Something went wrong trying to insert the new document: ${err}\n`)
+  }
+}
+
+async function edit(data) {
+  try {
+    const preparedData = { ...data }
+    delete preparedData.id
+
+    const insertedItem = await collection.updateOne(
+      { _id: new ObjectId(`${data.id}`) },
+      { $set: preparedData },
+    )
+    return insertedItem
+  } catch (err) {
+    console.error(`Something went wrong trying to update document: ${err}\n`)
   }
 }
 

@@ -23,6 +23,20 @@ export class Connector {
     return data
   }
 
+  static async editItem(item: INewDrink): Promise<IInsertConfirmation> {
+    const uri = 'http://localhost:3000/api/edit'
+    const response = await fetch(uri, {
+      method: 'PUT',
+      body: JSON.stringify(item),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+
+    const data = await response.json()
+    return data
+  }
+
   static async deleteItem(id: string): Promise<IDeleteConfirmation> {
     const uri = `http://localhost:3000/api/delete`
     const response = await fetch(uri, {
