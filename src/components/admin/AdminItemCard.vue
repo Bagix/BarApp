@@ -11,6 +11,7 @@ const props = defineProps(['drink'])
 
 function handleEdit() {
   store.setDrinkToEdit(props.drink._id)
+  store.setEditModalVisibility(true)
 }
 
 async function deleteItem() {

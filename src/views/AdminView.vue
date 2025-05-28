@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import AddItemForm from '@/components/admin/AddItemForm.vue'
-import EditItemForm from '@/components/admin/EditItemForm.vue'
+import EditFormModal from '@/components/admin/EditFormModal.vue'
 import ConfirmDialog from 'primevue/confirmdialog'
 import AdminItemCard from '@/components/admin/AdminItemCard.vue'
+
 import { useBarStore } from '@/stores/bar'
 import { storeToRefs } from 'pinia'
 import { onMounted } from 'vue'
@@ -22,7 +23,7 @@ onMounted(async () => {
     <div class="wrapper">
       <AdminItemCard v-for="drink in drinksList" :key="drink._id" :drink="drink" />
     </div>
-    <EditItemForm />
+    <EditFormModal />
   </main>
 </template>
 

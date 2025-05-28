@@ -17,7 +17,12 @@ export const useBarStore = defineStore('bar', () => {
   const drinksList = ref<Array<IDrink>>([])
   const pagination = ref(0)
   const isLoading = ref<boolean>(false)
-  const drinkToEdit = ref<IEditDrink>()
+  const drinkToEdit = ref<IEditDrink | null>()
+  const isEditModalVisible = ref<boolean>(false)
+
+  function setEditModalVisibility(isVisible: boolean) {
+    isEditModalVisible.value = isVisible
+  }
 
   async function getAllDrinks(limit: number = 5): Promise<void> {
     try {
@@ -103,7 +108,7 @@ export const useBarStore = defineStore('bar', () => {
     }
   }
 
-  function setDrinkToEdit(id: string) {
+  function setDrinkToEdit(id: string | null) {
     const selectedDrink = drinksList.value.find((el) => el._id === id)
 
     const tools = selectedDrink!.tools.join(', ')
@@ -120,6 +125,10 @@ export const useBarStore = defineStore('bar', () => {
       taste: selectedDrink!.taste,
       color: selectedDrink!.color,
     }
+  }
+
+  function resetDrinkToEdit() {
+    drinkToEdit.value = null
   }
 
   function prepareTools(rawTools: string) {
@@ -146,10 +155,13 @@ export const useBarStore = defineStore('bar', () => {
     drinksList,
     isLoading,
     drinkToEdit,
+    isEditModalVisible,
     getAllDrinks,
     addDrink,
     deleteItem,
     setDrinkToEdit,
     editDrink,
+    resetDrinkToEdit,
+    setEditModalVisibility,
   }
 })
