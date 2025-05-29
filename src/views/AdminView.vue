@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AddItemForm from '@/components/admin/AddItemForm.vue'
+import SearchBar from '@/components/SearchBar.vue'
 import EditFormModal from '@/components/admin/EditFormModal.vue'
 import ConfirmDialog from 'primevue/confirmdialog'
 import AdminItemCard from '@/components/admin/AdminItemCard.vue'
@@ -20,6 +21,7 @@ onMounted(async () => {
   <main class="container">
     <ConfirmDialog />
     <AddItemForm />
+    <SearchBar />
     <div class="wrapper">
       <AdminItemCard v-for="drink in drinksList" :key="drink._id" :drink="drink" />
     </div>

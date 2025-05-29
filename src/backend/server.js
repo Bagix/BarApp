@@ -27,6 +27,11 @@ app.get('/api/get-items', async (req, res) => {
   res.json(response)
 })
 
+app.get('/api/search', async (req, res) => {
+  const response = await getItemsByName(req.query.pagination, req.query.limit, req.query.search)
+  res.json(response)
+})
+
 app.post('/api/add', async (req, res) => {
   const response = await add(req.body)
   res.json(response)
@@ -38,7 +43,6 @@ app.put('/api/edit', async (req, res) => {
 })
 
 app.delete('/api/delete', async (req, res) => {
-  // console.log('kkkk--------', req.body)
   const response = await remove(req.body)
   res.json(response)
 })
@@ -54,6 +58,24 @@ async function getItems(pagination, limit) {
     return items
   } catch (err) {
     console.error(`Something went wrong trying to get documents: ${err}\n`)
+  }
+}
+
+async function getItemsByName(pagination, limit, search) {
+  try {
+    const items = await collection
+      .find({
+        $text: {
+          $search: search,
+        },
+      })
+      .skip(Number(pagination))
+      .limit(Number(limit))
+      .toArray()
+
+    return items
+  } catch (err) {
+    console.error(`Something went wrong trying to get documents by phrase ${search}: ${err}\n`)
   }
 }
 

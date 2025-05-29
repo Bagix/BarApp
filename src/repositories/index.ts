@@ -50,4 +50,16 @@ export class Connector {
     const data = await response.json()
     return data
   }
+
+  static async searchItemsByName(
+    pagination: number = 0,
+    limit: number = 1,
+    searchPhrase: string,
+  ): Promise<IDrink[]> {
+    const uri = `http://localhost:3000/api/search?search=${searchPhrase}&pagination=${pagination}&limit=${limit}`
+    const response = await fetch(uri)
+    const data = await response.json()
+
+    return data
+  }
 }

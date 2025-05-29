@@ -19,6 +19,7 @@ export const useBarStore = defineStore('bar', () => {
   const isLoading = ref<boolean>(false)
   const drinkToEdit = ref<IEditDrink | null>()
   const isEditModalVisible = ref<boolean>(false)
+  const searchPhrase = ref<string>('')
 
   function setEditModalVisibility(isVisible: boolean) {
     isEditModalVisible.value = isVisible
@@ -108,6 +109,21 @@ export const useBarStore = defineStore('bar', () => {
     }
   }
 
+  async function searchByName(limit: number = 5) {
+    try {
+      const items = await Connector.searchItemsByName(pagination.value, limit, searchPhrase.value)
+      pagination.value += limit
+      drinksList.value.push(...items)
+    } catch (e) {
+      console.error(`There was a problem in searchByName(): ${e}`)
+    }
+  }
+
+  function resetForSearch() {
+    pagination.value = 0
+    drinksList.value = []
+  }
+
   function setDrinkToEdit(id: string | null) {
     const selectedDrink = drinksList.value.find((el) => el._id === id)
 
@@ -156,6 +172,7 @@ export const useBarStore = defineStore('bar', () => {
     isLoading,
     drinkToEdit,
     isEditModalVisible,
+    searchPhrase,
     getAllDrinks,
     addDrink,
     deleteItem,
@@ -163,5 +180,7 @@ export const useBarStore = defineStore('bar', () => {
     editDrink,
     resetDrinkToEdit,
     setEditModalVisibility,
+    searchByName,
+    resetForSearch,
   }
 })
