@@ -65,7 +65,6 @@ export const useBarStore = defineStore('bar', () => {
     try {
       isLoading.value = true
       const response = await Connector.deleteItem(id)
-      console.log('elo---asad', response)
 
       if (response.acknowledged) {
         const indextoRemove = drinksList.value.findIndex((drink) => drink._id === id)
@@ -111,6 +110,10 @@ export const useBarStore = defineStore('bar', () => {
 
   async function searchByName(limit: number = 5) {
     try {
+      if (!searchPhrase.value) {
+        return
+      }
+
       const items = await Connector.searchItemsByName(pagination.value, limit, searchPhrase.value)
       pagination.value += limit
       drinksList.value.push(...items)
