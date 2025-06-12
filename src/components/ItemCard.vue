@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Card from 'primevue/card'
+import Badge from 'primevue/badge'
 
 const props = defineProps(['drink'])
 const tools = props.drink.tools
@@ -9,12 +10,18 @@ const ingredients = props.drink.ingredients
 <template>
   <Card class="item">
     <template #title>
+      <div class="badge-wrapper">
+        <Badge :value="props.drink.taste" severity="secondary" class="taste-badge" />
+        <Badge
+          :value="props.drink.color.label"
+          :style="{ background: props.drink.color.value }"
+          class="color-badge"
+        />
+      </div>
       <p class="title">{{ props.drink.name }}</p>
     </template>
     <template #content>
       <p class="description">{{ props.drink.description }}</p>
-      <p class="description">{{ props.drink.taste }}</p>
-      <p class="description">{{ props.drink.color }}</p>
       <div class="tools">
         <span>Przybory:</span>
         <ul class="tools-list">
@@ -41,10 +48,30 @@ const ingredients = props.drink.ingredients
 .item {
   font-size: 16px;
   width: 100%;
-  max-width: 400px;
+  border: 1px solid var(--secondary-color);
+  box-shadow: 0px 1px 3px 2px #222831;
+
+  @media (min-width: 767px) {
+    max-width: 300px;
+  }
+
+  @media (min-width: 1300px) {
+    max-width: 400px;
+  }
 }
+
+.badge-wrapper {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
 .title {
   text-align: center;
+
+  &::first-letter {
+    text-transform: capitalize;
+  }
 }
 
 .description {
@@ -56,7 +83,7 @@ const ingredients = props.drink.ingredients
 }
 
 .tools {
-  margin-top: 16px;
+  margin-top: 24px;
   display: flex;
 
   & span {
@@ -93,7 +120,7 @@ const ingredients = props.drink.ingredients
   & li {
     border-bottom: 1px solid #fff;
     margin-bottom: 12px;
-    padding-left: 6px;
+    padding-left: 16px;
     padding-bottom: 3px;
     font-size: 16px;
   }
@@ -101,5 +128,13 @@ const ingredients = props.drink.ingredients
 
 .prep {
   margin-top: 16px;
+}
+
+.taste-badge {
+  background: #393e46;
+}
+
+.color-badge {
+  color: #fff;
 }
 </style>

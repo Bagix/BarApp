@@ -14,7 +14,12 @@ export interface INewDrinkRaw {
   ingredients: string
   tools: string
   taste: string
-  color: string
+  color: IColor | null
+}
+
+export interface IColor {
+  label: string
+  value: string
 }
 
 export interface INewDrink {
@@ -25,7 +30,12 @@ export interface INewDrink {
   ingredients: IIngredient[]
   tools: string[]
   taste: string
-  color: string
+  color: IColor
+}
+
+export interface ISelectedFilters {
+  filterName: string
+  filterValues: string[]
 }
 
 export interface IIngredient {
@@ -47,4 +57,12 @@ export const baseAlcohols = ['Whisky', 'Rum', 'Wódka', 'Gin', 'Likier']
 
 export const flavors = ['Słodki', 'Kwaśny', 'Słodko-kwaśny', 'Wytrawny', 'Orzeźwiający']
 
-export const colors = ['Czerwony', 'Niebieski', 'Zielony', 'Żółty', 'Fioletowy', 'Rożówy']
+export const colors = [
+  { label: 'Czerwony', value: '#AA1B1F' },
+  { label: 'Niebieski', value: '#005B8A' },
+  { label: 'Zielony', value: '#3F7A36' },
+  { label: 'Żółty', value: '#EDCB50' },
+  { label: 'Fioletowy', value: '#633448' },
+  { label: 'Rożówy', value: '#ffc0cb' },
+  { label: 'Pomarańczowy', value: '#F09137' },
+]

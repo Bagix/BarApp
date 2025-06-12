@@ -23,7 +23,7 @@ const collection = database.collection('cocktails')
  */
 
 app.get('/api/get-items', async (req, res) => {
-  const response = await getItems(req.query.pagination, req.query.limit)
+  const response = await getItems(req.query.pagination, req.query.limit, req.query.filters)
   res.json(response)
 })
 
@@ -51,9 +51,23 @@ app.delete('/api/delete', async (req, res) => {
  * --------------------- METHODS ---------------------
  */
 
-async function getItems(pagination, limit) {
+async function getItems(pagination, limit, filters) {
   try {
-    const items = await collection.find({}).skip(Number(pagination)).limit(Number(limit)).toArray()
+    let preparedFilters = {}
+
+    if (filters) {
+      const filtersObject = JSON.parse(filters)
+
+      Object.values(filtersObject).forEach((filter) => {
+        preparedFilters[filter.filterName] = { $in: filter.filterValues }
+      })
+    }
+
+    const items = await collection
+      .find(preparedFilters)
+      .skip(Number(pagination))
+      .limit(Number(limit))
+      .toArray()
 
     return items
   } catch (err) {

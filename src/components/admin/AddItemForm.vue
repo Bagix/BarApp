@@ -18,10 +18,11 @@ const formModel: INewDrinkRaw = {
   ingredients: '',
   tools: '',
   taste: '',
-  color: '',
+  color: null,
 }
 
 async function handleSubmit(): Promise<void> {
+  console.log('kurwa', formModel)
   await store.addDrink(formModel)
 }
 </script>
@@ -52,7 +53,23 @@ async function handleSubmit(): Promise<void> {
 
       <Select v-model="formModel.taste" :options="flavors" placeholder="Smak" />
 
-      <Select v-model="formModel.color" :options="colors" placeholder="Kolor" />
+      <Select v-model="formModel.color" :options="colors" placeholder="Kolor">
+        <template #value="slotProps">
+          <div v-if="slotProps.value" class="flex items-center">
+            <!-- <span class="color-ball" :style="'background': slotProps.value.value" /> -->
+            <div>{{ slotProps.value.label }}</div>
+          </div>
+          <span v-else>
+            {{ slotProps.placeholder }}
+          </span>
+        </template>
+        <template #option="slotProps">
+          <div class="flex items-center">
+            <span class="color-ball" />
+            <div>{{ slotProps.option.label }}</div>
+          </div>
+        </template>
+      </Select>
     </div>
 
     <div class="column">

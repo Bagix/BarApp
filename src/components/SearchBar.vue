@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import FloatLabel from 'primevue/floatlabel'
 import InputText from 'primevue/inputtext'
 import { useBarStore } from '@/stores/bar'
 import { storeToRefs } from 'pinia'
@@ -7,24 +8,32 @@ const store = useBarStore()
 const { searchPhrase } = storeToRefs(store)
 
 async function handleSearch() {
-  store.resetForSearch()
+  if (!searchPhrase.value.trim()) {
+    return
+  }
+  store.resetResults()
   await store.searchByName()
 }
 
 async function handleReset() {
-  store.resetForSearch()
+  store.resetSearchPhrase()
+  store.resetResults()
   await store.getAllDrinks()
 }
 </script>
 
 <template>
   <div class="search-wrapper">
-    <InputText
-      v-model="searchPhrase"
-      name="search"
-      class="search-input"
-      @keyup.enter="handleSearch"
-    />
+    <FloatLabel variant="on" class="search-element">
+      <InputText
+        id="search"
+        v-model="searchPhrase"
+        name="search"
+        class="search-input"
+        @keyup.enter="handleSearch"
+      />
+      <label for="search">Wyszkuj po nazwie</label>
+    </FloatLabel>
     <div class="btn-wrapper">
       <UIButton label="Wyszukaj" @click="handleSearch" severity="info" class="btn" />
       <UIButton
@@ -51,8 +60,9 @@ async function handleReset() {
   }
 }
 
+.search-element,
 .search-input {
-  min-width: 60vw;
+  width: 100%;
 }
 
 .btn-wrapper {

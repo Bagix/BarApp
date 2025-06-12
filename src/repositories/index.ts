@@ -1,8 +1,19 @@
-import type { IDrink, INewDrink, IInsertConfirmation, IDeleteConfirmation } from '@/utils/types'
+import type {
+  IDrink,
+  INewDrink,
+  IInsertConfirmation,
+  IDeleteConfirmation,
+  ISelectedFilters,
+} from '@/utils/types'
 
 export class Connector {
-  static async getItems(pagination: number = 0, limit: number = 1): Promise<IDrink[]> {
-    const uri = `http://localhost:3000/api/get-items?pagination=${pagination}&limit=${limit}`
+  static async getItems(
+    pagination: number = 0,
+    limit: number = 1,
+    filters: ISelectedFilters[],
+  ): Promise<IDrink[]> {
+    const jsonFilters = JSON.stringify(filters)
+    const uri = `http://localhost:3000/api/get-items?pagination=${pagination}&limit=${limit}&filters=${jsonFilters}`
     const response = await fetch(uri)
     const data = await response.json()
 
