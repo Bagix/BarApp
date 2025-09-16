@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { Connector } from '@/repositories'
-import type { IDrink, IEditDrink, INewDrinkRaw, ISelectedFilters } from '@/utils/types'
+import type { IDrink, IEditDrink, INewDrinkRaw } from '@/utils/types'
+import { useFiltersStore } from '@/stores/filters'
 
 interface IBarState {
   mainItemsList: IDrink[]
@@ -9,10 +10,6 @@ interface IBarState {
   drinkToEdit: IEditDrink | null
   isEditModalVisible: boolean
   searchPhrase: string
-  filters: ISelectedFilters[]
-  selectedFilters: ISelectedFilters[]
-  activeFilters: ISelectedFilters[]
-  isFiltersVisible: boolean
 }
 
 export const useBarStore = defineStore('bar', {
@@ -23,27 +20,19 @@ export const useBarStore = defineStore('bar', {
     drinkToEdit: null,
     isEditModalVisible: false,
     searchPhrase: '',
-    selectedFilters: [],
-    filters: [],
-    activeFilters: [],
-    isFiltersVisible: false,
   }),
 
   getters: {},
 
   actions: {
-    toogleFilters(isVisible: boolean) {
-      this.isFiltersVisible = isVisible
-    },
-
     setEditModalVisibility(isVisible: boolean) {
       this.isEditModalVisible = isVisible
     },
 
     async getAllDrinks(limit: number = 7): Promise<void> {
+      const filtersStore = useFiltersStore()
       try {
-        this.activeFilters = [...this.selectedFilters]
-        const items = await Connector.getItems(this.pagination, limit, this.activeFilters)
+        const items = await Connector.getItems(this.pagination, limit, filtersStore.activeFilters)
         this.pagination += limit
         this.mainItemsList.push(...items)
       } catch (e) {
@@ -143,10 +132,6 @@ export const useBarStore = defineStore('bar', {
       this.mainItemsList = []
     },
 
-    resetFilters() {
-      this.activeFilters = []
-    },
-
     resetSearchPhrase() {
       this.searchPhrase = ''
     },
@@ -198,28 +183,6 @@ export const useBarStore = defineStore('bar', {
             type: ingredientParts[1],
           }
         })
-    },
-
-    setActiveFilter(name: string, value: string) {
-      const filterIndex = this.selectedFilters.findIndex((filter) => filter.filterName === name)
-
-      if (filterIndex === -1) {
-        this.selectedFilters.push({ filterName: name, filterValues: [value] })
-        return
-      }
-
-      const filterValueIndex = this.selectedFilters[filterIndex].filterValues.indexOf(value)
-
-      if (filterValueIndex === -1) {
-        this.selectedFilters[filterIndex].filterValues.push(value)
-        return
-      }
-
-      this.selectedFilters[filterIndex].filterValues.splice(filterValueIndex, 1)
-
-      if (!this.selectedFilters[filterIndex].filterValues.length) {
-        this.selectedFilters.splice(filterIndex, 1)
-      }
     },
   },
 })

@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import SearchBar from '@/components/SearchBar.vue'
 import FiltersWrapper from '@/components/FiltersWrapper.vue'
-import { useBarStore } from '@/stores/bar'
+import { useFiltersStore } from '@/stores/filters'
 
-const store = useBarStore()
+const filtersStore = useFiltersStore()
 
 function openFilters() {
-  store.toogleFilters(true)
+  filtersStore.toogleFilters(true)
 }
 </script>
 

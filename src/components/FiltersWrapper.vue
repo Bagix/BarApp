@@ -2,13 +2,15 @@
 import Checkbox from 'primevue/checkbox'
 import { colors, flavors, baseAlcohols } from '@/utils/types'
 import { useBarStore } from '@/stores/bar'
+import { useFiltersStore } from '@/stores/filters'
 import { storeToRefs } from 'pinia'
 import Drawer from 'primevue/drawer'
-import { ref, watch } from 'vue'
+import { onBeforeMount, watch } from 'vue'
 
-const store = useBarStore()
-const { selectedFilters, activeFilters, isFiltersVisible } = storeToRefs(store)
-const componentSelectedFilter = ref([])
+const barStore = useBarStore()
+const filtersStore = useFiltersStore()
+const { selectedFilters, activeFilters, isFiltersVisible, rawFiltersValues } =
+  storeToRefs(filtersStore)
 
 function handleInput(event: Event) {
   const el = event.target as HTMLInputElement
@@ -16,21 +18,21 @@ function handleInput(event: Event) {
   const filterName = el.name
   const filterValue = el.value
 
-  store.setActiveFilter(filterName, filterValue)
+  filtersStore.setSelectedFilter(filterName, filterValue)
 }
 
 async function handleFilter() {
-  store.resetResults()
-  store.toogleFilters(false)
-  await store.getAllDrinks()
+  barStore.resetResults()
+  filtersStore.setActiveFilters()
+  filtersStore.toogleFilters(false)
+  await barStore.getAllDrinks()
 }
 
 async function handleFiltersReset() {
-  componentSelectedFilter.value = []
-  store.resetFilters()
-  store.resetResults()
-  isFiltersVisible.value = false
-  await store.getAllDrinks()
+  filtersStore.resetFilters()
+  barStore.resetResults()
+  filtersStore.toogleFilters(false)
+  await barStore.getAllDrinks()
 }
 
 watch(isFiltersVisible, () => {
@@ -39,6 +41,10 @@ watch(isFiltersVisible, () => {
   } else {
     document.body.classList.remove('no-scroll')
   }
+})
+
+onBeforeMount(() => {
+  filtersStore.setActiveFiltersFromUrl()
 })
 </script>
 
@@ -52,7 +58,7 @@ watch(isFiltersVisible, () => {
             :inputId="baseAlco"
             name="baseAlcohol"
             :value="baseAlco"
-            v-model="componentSelectedFilter"
+            v-model="rawFiltersValues"
             @input="handleInput"
           />
           <label :for="baseAlco"> {{ baseAlco }} </label>
@@ -68,7 +74,7 @@ watch(isFiltersVisible, () => {
             :inputId="taste"
             name="taste"
             :value="taste"
-            v-model="componentSelectedFilter"
+            v-model="rawFiltersValues"
             @input="handleInput"
           />
           <label :for="taste"> {{ taste }} </label>
@@ -83,7 +89,7 @@ watch(isFiltersVisible, () => {
           <Checkbox
             :inputId="color.label"
             name="color.label"
-            v-model="componentSelectedFilter"
+            v-model="rawFiltersValues"
             @input="handleInput"
             :value="color.label"
           />
