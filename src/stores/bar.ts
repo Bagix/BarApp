@@ -10,6 +10,8 @@ interface IBarState {
   isEditModalVisible: boolean
   searchPhrase: string
   filters: ISelectedFilters[]
+  selectedFilters: ISelectedFilters[]
+  activeFilters: ISelectedFilters[]
   isFiltersVisible: boolean
 }
 
@@ -21,20 +23,27 @@ export const useBarStore = defineStore('bar', {
     drinkToEdit: null,
     isEditModalVisible: false,
     searchPhrase: '',
+    selectedFilters: [],
     filters: [],
+    activeFilters: [],
     isFiltersVisible: false,
   }),
 
   getters: {},
 
   actions: {
+    toogleFilters(isVisible: boolean) {
+      this.isFiltersVisible = isVisible
+    },
+
     setEditModalVisibility(isVisible: boolean) {
       this.isEditModalVisible = isVisible
     },
 
     async getAllDrinks(limit: number = 7): Promise<void> {
       try {
-        const items = await Connector.getItems(this.pagination, limit, this.filters)
+        this.activeFilters = [...this.selectedFilters]
+        const items = await Connector.getItems(this.pagination, limit, this.activeFilters)
         this.pagination += limit
         this.mainItemsList.push(...items)
       } catch (e) {
@@ -134,6 +143,10 @@ export const useBarStore = defineStore('bar', {
       this.mainItemsList = []
     },
 
+    resetFilters() {
+      this.activeFilters = []
+    },
+
     resetSearchPhrase() {
       this.searchPhrase = ''
     },
@@ -187,25 +200,25 @@ export const useBarStore = defineStore('bar', {
         })
     },
 
-    setFilter(name: string, value: string) {
-      const filterIndex = this.filters.findIndex((filter) => filter.filterName === name)
+    setActiveFilter(name: string, value: string) {
+      const filterIndex = this.selectedFilters.findIndex((filter) => filter.filterName === name)
 
       if (filterIndex === -1) {
-        this.filters.push({ filterName: name, filterValues: [value] })
+        this.selectedFilters.push({ filterName: name, filterValues: [value] })
         return
       }
 
-      const filterValueIndex = this.filters[filterIndex].filterValues.indexOf(value)
+      const filterValueIndex = this.selectedFilters[filterIndex].filterValues.indexOf(value)
 
       if (filterValueIndex === -1) {
-        this.filters[filterIndex].filterValues.push(value)
+        this.selectedFilters[filterIndex].filterValues.push(value)
         return
       }
 
-      this.filters[filterIndex].filterValues.splice(filterValueIndex, 1)
+      this.selectedFilters[filterIndex].filterValues.splice(filterValueIndex, 1)
 
-      if (!this.filters[filterIndex].filterValues.length) {
-        this.filters.splice(filterIndex, 1)
+      if (!this.selectedFilters[filterIndex].filterValues.length) {
+        this.selectedFilters.splice(filterIndex, 1)
       }
     },
   },

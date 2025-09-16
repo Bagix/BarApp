@@ -8,48 +8,51 @@ const ingredients = props.drink.ingredients
 </script>
 
 <template>
-  <Card class="item">
-    <template #title>
-      <div class="badge-wrapper">
-        <Badge :value="props.drink.taste" severity="secondary" class="taste-badge" />
-        <Badge
-          :value="props.drink.color.label"
-          :style="{ background: props.drink.color.value }"
-          class="color-badge"
-        />
-      </div>
-      <p class="title">{{ props.drink.name }}</p>
-    </template>
-    <template #content>
-      <p class="description">{{ props.drink.description }}</p>
-      <div class="tools">
-        <span>Przybory:</span>
-        <ul class="tools-list">
-          <li v-for="tool in tools" :key="tool">
-            {{ tool }}
+  <div class="item-card">
+    <Card class="item">
+      <template #title>
+        <div class="badge-wrapper">
+          <Badge :value="props.drink.taste" severity="secondary" class="taste-badge" />
+          <Badge
+            :value="props.drink.color.label"
+            :style="{ background: props.drink.color.value }"
+            class="color-badge"
+          />
+        </div>
+        <p class="title">{{ props.drink.name }}</p>
+      </template>
+      <template #content>
+        <p class="description">{{ props.drink.description }}</p>
+        <div class="tools">
+          <span>Przybory:</span>
+          <ul class="tools-list">
+            <li v-for="tool in tools" :key="tool">
+              {{ tool }}
+            </li>
+          </ul>
+        </div>
+
+        <ul class="ingredients">
+          <li v-for="ingredient in ingredients" :key="ingredient.type">
+            {{ ingredient.amount }} {{ ingredient.type }}
           </li>
         </ul>
-      </div>
-
-      <ul class="ingredients">
-        <li v-for="ingredient in ingredients" :key="ingredient.type">
-          {{ ingredient.amount }} {{ ingredient.type }}
-        </li>
-      </ul>
-      <p class="prep">{{ props.drink.preparation }}</p>
-    </template>
-    <template v-if="$slots.footer" #footer>
-      <slot name="footer" />
-    </template>
-  </Card>
+        <p class="prep">{{ props.drink.preparation }}</p>
+      </template>
+      <template v-if="$slots.footer" #footer>
+        <slot name="footer" />
+      </template>
+    </Card>
+  </div>
 </template>
 
 <style scoped>
-.item {
-  font-size: 16px;
+.item-card {
   width: 100%;
-  border: 1px solid var(--secondary-color);
-  box-shadow: 0px 1px 3px 2px #222831;
+  background: url(../assets/images/test.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 
   @media (min-width: 767px) {
     max-width: 300px;
@@ -58,6 +61,27 @@ const ingredients = props.drink.ingredients
   @media (min-width: 1300px) {
     max-width: 400px;
   }
+}
+.item {
+  font-size: 16px;
+  /* width: 100%; */
+  height: 100%;
+  border: 1px solid var(--secondary-color);
+  box-shadow: 0px 1px 3px 2px #222831;
+  /* position: relative; */
+  background-color: rgba(0, 0, 0, 0.65);
+  /* background: url(../assets/images/test.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center; */
+
+  /* @media (min-width: 767px) {
+    max-width: 300px;
+  }
+
+  @media (min-width: 1300px) {
+    max-width: 400px;
+  } */
 }
 
 .badge-wrapper {
