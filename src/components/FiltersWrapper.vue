@@ -1,16 +1,14 @@
 <script setup lang="ts">
-import Checkbox from 'primevue/checkbox'
-import { colors, flavors, baseAlcohols } from '@/utils/types'
 import { useBarStore } from '@/stores/bar'
 import { useFiltersStore } from '@/stores/filters'
 import { storeToRefs } from 'pinia'
 import Drawer from 'primevue/drawer'
 import { onBeforeMount, watch } from 'vue'
+import { baseFilters } from '@/utils/filters'
 
 const barStore = useBarStore()
 const filtersStore = useFiltersStore()
-const { selectedFilters, activeFilters, isFiltersVisible, rawFiltersValues } =
-  storeToRefs(filtersStore)
+const { selectedFilters, activeFilters, isFiltersVisible } = storeToRefs(filtersStore)
 
 function handleInput(event: Event) {
   const el = event.target as HTMLInputElement
@@ -19,6 +17,11 @@ function handleInput(event: Event) {
   const filterValue = el.value
 
   filtersStore.setSelectedFilter(filterName, filterValue)
+}
+
+function isChecked(filterName: string, filterValue: string): boolean {
+  const filterGroup = selectedFilters.value.find((filter) => filter.filterName === filterName)
+  return filterGroup?.filterValues.some((val) => val === filterValue) ?? false
 }
 
 async function handleFilter() {
@@ -50,53 +53,23 @@ onBeforeMount(() => {
 
 <template>
   <Drawer class="filters-wrapper" v-model:visible="isFiltersVisible" header="Filtry">
-    <div class="filters-group">
-      <p class="title">Alkohol Bazowy</p>
+    <div class="filters-group" v-for="filtersGroup in baseFilters" :key="filtersGroup.name">
+      <p class="title">{{ filtersGroup.displayName }}</p>
       <div class="options">
-        <div v-for="baseAlco in baseAlcohols" :key="baseAlco" class="single-option">
-          <Checkbox
-            :inputId="baseAlco"
-            name="baseAlcohol"
-            :value="baseAlco"
-            v-model="rawFiltersValues"
-            @input="handleInput"
+        <label v-for="option in filtersGroup.options" :key="option" class="single-option">
+          <input
+            type="checkbox"
+            class="checkbox"
+            @change="handleInput"
+            :value="option"
+            :name="filtersGroup.name"
+            :checked="isChecked(filtersGroup.name, option)"
           />
-          <label :for="baseAlco"> {{ baseAlco }} </label>
-        </div>
+          <span>{{ option }}</span>
+        </label>
       </div>
     </div>
 
-    <div class="filters-group">
-      <p class="title">Smak</p>
-      <div class="options">
-        <div v-for="taste in flavors" :key="taste" class="single-option">
-          <Checkbox
-            :inputId="taste"
-            name="taste"
-            :value="taste"
-            v-model="rawFiltersValues"
-            @input="handleInput"
-          />
-          <label :for="taste"> {{ taste }} </label>
-        </div>
-      </div>
-    </div>
-
-    <div class="filters-group">
-      <p class="title">Kolor</p>
-      <div class="options">
-        <div v-for="color in colors" :key="color.label" class="single-option">
-          <Checkbox
-            :inputId="color.label"
-            name="color.label"
-            v-model="rawFiltersValues"
-            @input="handleInput"
-            :value="color.label"
-          />
-          <label :for="color.label"> {{ color.label }} </label>
-        </div>
-      </div>
-    </div>
     <div class="filters-btn-wrapper">
       <UIButton label="Filtruj" :disabled="!selectedFilters.length" @click="handleFilter" />
       <UIButton
@@ -136,9 +109,13 @@ div.p-drawer-content {
   display: flex;
   align-items: center;
   gap: 8px;
+  cursor: pointer;
+  width: fit-content;
+  padding-right: 15px;
 
-  & label {
-    cursor: pointer;
+  & .checkbox {
+    width: 20px;
+    height: 20px;
   }
 }
 

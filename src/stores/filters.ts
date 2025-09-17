@@ -1,13 +1,12 @@
 import { defineStore } from 'pinia'
 import type { ISelectedFilters } from '@/utils/types'
-import { filtersSeparator } from '@/utils/Utils'
+import { filtersSeparator } from '@/utils/utils'
 
 interface IFiltersState {
   filters: ISelectedFilters[]
   selectedFilters: ISelectedFilters[]
   activeFilters: ISelectedFilters[]
   isFiltersVisible: boolean
-  rawFiltersValues: string[]
 }
 
 export const useFiltersStore = defineStore('filters', {
@@ -16,7 +15,6 @@ export const useFiltersStore = defineStore('filters', {
     selectedFilters: [],
     activeFilters: [],
     isFiltersVisible: false,
-    rawFiltersValues: [],
   }),
 
   getters: {},
@@ -45,9 +43,22 @@ export const useFiltersStore = defineStore('filters', {
     },
 
     setActiveFilters() {
-      this.activeFilters = [...this.selectedFilters]
       const newUrl = new URL(window.location.href)
 
+      // Remove filters that have been completely uncheked by user
+      this.activeFilters.forEach((previousFilter) => {
+        const filterIsDeleted = this.selectedFilters.every(
+          (selectedFilter) => selectedFilter.filterName !== previousFilter.filterName,
+        )
+        if (filterIsDeleted) {
+          newUrl.searchParams.delete(previousFilter.filterName)
+        }
+      })
+
+      // Setup new active filters
+      this.activeFilters = [...this.selectedFilters]
+
+      // Go through new active filters, that have been selected by user
       this.activeFilters.forEach((filter) => {
         newUrl.searchParams.delete(filter.filterName)
         const valueString = filter.filterValues.join(filtersSeparator)
@@ -70,12 +81,9 @@ export const useFiltersStore = defineStore('filters', {
         const filterFromUrl = params.get(filterName)
 
         if (filterFromUrl) {
-          const filterValuesArr = filterFromUrl.split(filtersSeparator)
-          this.rawFiltersValues = [...this.rawFiltersValues, ...filterValuesArr]
-
           const newFilter = {
             filterName,
-            filterValues: filterValuesArr,
+            filterValues: filterFromUrl.split(filtersSeparator),
           }
 
           this.activeFilters.push(newFilter)
@@ -88,7 +96,6 @@ export const useFiltersStore = defineStore('filters', {
     resetFilters() {
       this.activeFilters = []
       this.selectedFilters = []
-      this.rawFiltersValues = []
       const newUrl = new URL(window.location.href)
       window.history.pushState({}, '', newUrl.origin)
     },
