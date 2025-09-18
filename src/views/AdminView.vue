@@ -7,7 +7,6 @@ import MainLayout from '@/layouts/MainLayout.vue'
 import { ref } from 'vue'
 import { useBarStore } from '@/stores/bar'
 import { storeToRefs } from 'pinia'
-import { onMounted } from 'vue'
 
 const store = useBarStore()
 const { mainItemsList } = storeToRefs(store)
@@ -17,10 +16,6 @@ const isOpen = ref(false)
 function handleToggle() {
   isOpen.value = !isOpen.value
 }
-
-onMounted(async () => {
-  await store.getAllDrinks()
-})
 </script>
 
 <template>

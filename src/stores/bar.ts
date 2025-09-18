@@ -6,6 +6,7 @@ import { useFiltersStore } from '@/stores/filters'
 interface IBarState {
   mainItemsList: IDrink[]
   pagination: number
+  isLoadingAdminPanel: boolean
   isLoading: boolean
   drinkToEdit: IEditDrink | null
   isEditModalVisible: boolean
@@ -16,6 +17,7 @@ export const useBarStore = defineStore('bar', {
   state: (): IBarState => ({
     mainItemsList: [],
     pagination: 0,
+    isLoadingAdminPanel: false,
     isLoading: false,
     drinkToEdit: null,
     isEditModalVisible: false,
@@ -29,20 +31,23 @@ export const useBarStore = defineStore('bar', {
       this.isEditModalVisible = isVisible
     },
 
-    async getAllDrinks(limit: number = 7): Promise<void> {
+    async getAllDrinks(limit: number = 2): Promise<void> {
       const filtersStore = useFiltersStore()
       try {
+        this.isLoading = true
         const items = await Connector.getItems(this.pagination, limit, filtersStore.activeFilters)
         this.pagination += limit
         this.mainItemsList.push(...items)
       } catch (e) {
         console.error(`There was a problem in getAllDrinks(): ${e}`)
+      } finally {
+        this.isLoading = false
       }
     },
 
     async addDrink(data: INewDrinkRaw): Promise<void> {
       try {
-        this.isLoading = true
+        this.isLoadingAdminPanel = true
 
         const ingredients = this.prepareIngredients(data.ingredients)
         const tools = this.prepareTools(data.tools)
@@ -62,13 +67,13 @@ export const useBarStore = defineStore('bar', {
       } catch (e) {
         console.error(`There was a problem in addDrink(): ${e}`)
       } finally {
-        this.isLoading = false
+        this.isLoadingAdminPanel = false
       }
     },
 
     async deleteItem(id: string) {
       try {
-        this.isLoading = true
+        this.isLoadingAdminPanel = true
         const response = await Connector.deleteItem(id)
 
         if (response.acknowledged) {
@@ -78,7 +83,7 @@ export const useBarStore = defineStore('bar', {
       } catch (e) {
         console.error(`There was a problem in deleteItem(): ${e}`)
       } finally {
-        this.isLoading = false
+        this.isLoadingAdminPanel = false
       }
     },
 
@@ -88,7 +93,7 @@ export const useBarStore = defineStore('bar', {
           return
         }
 
-        this.isLoading = true
+        this.isLoadingAdminPanel = true
 
         const ingredients = this.prepareIngredients(this.drinkToEdit.ingredients)
         const tools = this.prepareTools(this.drinkToEdit.tools)
@@ -109,7 +114,7 @@ export const useBarStore = defineStore('bar', {
       } catch (e) {
         console.error(`There was a problem in editDrink(): ${e}`)
       } finally {
-        this.isLoading = false
+        this.isLoadingAdminPanel = false
       }
     },
 

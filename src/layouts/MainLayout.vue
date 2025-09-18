@@ -1,13 +1,26 @@
 <script setup lang="ts">
 import SearchBar from '@/components/SearchBar.vue'
 import FiltersWrapper from '@/components/FiltersWrapper.vue'
+import InfinitiScrollTrigger from '@/components/InfinitiScrollTrigger.vue'
 import { useFiltersStore } from '@/stores/filters'
+import { onMounted } from 'vue'
+import { useBarStore } from '@/stores/bar'
+
+const store = useBarStore()
 
 const filtersStore = useFiltersStore()
+
+async function handleInfinitiScroll() {
+  await store.getAllDrinks()
+}
 
 function openFilters() {
   filtersStore.toogleFilters(true)
 }
+
+onMounted(async () => {
+  await store.getAllDrinks()
+})
 </script>
 
 <template>
@@ -31,6 +44,7 @@ function openFilters() {
       </div>
 
       <slot name="modals" />
+      <InfinitiScrollTrigger @triggered="handleInfinitiScroll" />
     </main>
   </div>
 </template>

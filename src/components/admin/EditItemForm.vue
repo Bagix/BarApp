@@ -8,7 +8,7 @@ import { colors, flavors, baseAlcohols } from '@/utils/types'
 import { storeToRefs } from 'pinia'
 
 const store = useBarStore()
-const { isLoading, drinkToEdit } = storeToRefs(store)
+const { isLoadingAdminPanel, drinkToEdit } = storeToRefs(store)
 
 async function handleSubmit(): Promise<void> {
   await store.editDrink()
@@ -16,7 +16,7 @@ async function handleSubmit(): Promise<void> {
 </script>
 
 <template>
-  <form v-if="drinkToEdit" class="form" @submit.prevent="handleSubmit" :inert="isLoading">
+  <form v-if="drinkToEdit" class="form" @submit.prevent="handleSubmit" :inert="isLoadingAdminPanel">
     <div class="column">
       <FloatLabel class="input-element" variant="on">
         <InputText id="name" v-model="drinkToEdit.name" autocomplete="off" required />
@@ -68,7 +68,7 @@ async function handleSubmit(): Promise<void> {
       </FloatLabel>
     </div>
 
-    <UIButton type="submit" label="Zapisz" class="btn-submit" :loading="isLoading" />
+    <UIButton type="submit" label="Zapisz" class="btn-submit" :loading="isLoadingAdminPanel" />
   </form>
 </template>
 

@@ -128,7 +128,6 @@ div.p-drawer-content {
   position: sticky;
   bottom: 0;
   border-top: 1px solid var(--secondary-color);
-  box-shadow: 0px 1px 3px 2px #222831;
   background: #18181b;
 }
 </style>
