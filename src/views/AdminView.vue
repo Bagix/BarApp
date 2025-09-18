@@ -28,7 +28,7 @@ function handleToggle() {
       <AdminItemCard v-for="drink in mainItemsList" :key="drink._id" :drink="drink" />
     </template>
 
-    <template name="modals">
+    <template #modals>
       <ConfirmDialog />
       <EditFormModal />
     </template>

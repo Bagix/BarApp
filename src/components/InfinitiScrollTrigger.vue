@@ -19,13 +19,11 @@ onMounted(() => {
   }
 
   const options = {
-    rootMargin: '50px',
+    rootMargin: '50px 0 0 0',
   }
 
   const observer = new IntersectionObserver(([entry]) => {
-    // console.log('co jest', entry)
     if (entry.isIntersecting && !isLoading.value) {
-      console.log('idzie jak przcinak')
       emit('triggered')
     }
   }, options)
