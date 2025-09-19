@@ -12,14 +12,12 @@ const emit = defineEmits(['triggered'])
 const trigger = useTemplateRef('trigger')
 
 onMounted(() => {
-  console.log('test', trigger)
-
   if (!trigger.value) {
     return
   }
 
   const options = {
-    rootMargin: '50px 0 0 0',
+    rootMargin: '50px 0px 0px 0px',
   }
 
   const observer = new IntersectionObserver(([entry]) => {
@@ -35,19 +33,33 @@ onMounted(() => {
 <template>
   <div class="trigger-wrapper">
     <div ref="trigger" class="infinity-scroll-trigger" :class="{ hide: isLoading }" />
-    <ProgressSpinner v-if="isLoading" />
+    <ProgressSpinner v-if="isLoading" class="spinner" />
   </div>
 </template>
 
 <style>
+.trigger-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
 .infinity-scroll-trigger {
-  width: 100px;
-  height: 10px;
-  background: red;
+  width: 100%;
+  height: 6px;
+  width: 30%;
+  background: #333;
   margin: 15px 0;
+  border-radius: 5px;
 
   &.hide {
     opacity: 0;
   }
+}
+
+.spinner {
+  position: absolute;
 }
 </style>

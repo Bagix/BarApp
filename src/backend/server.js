@@ -52,6 +52,8 @@ app.delete('/api/delete', async (req, res) => {
  */
 
 async function getItems(pagination, limit, filters) {
+  let isEndOfCollection = false
+
   try {
     let preparedFilters = {}
 
@@ -69,13 +71,19 @@ async function getItems(pagination, limit, filters) {
       .limit(Number(limit))
       .toArray()
 
-    return items
+    if (items.length < limit) {
+      isEndOfCollection = true
+    }
+
+    return { items, isEndOfCollection }
   } catch (err) {
     console.error(`Something went wrong trying to get documents: ${err}\n`)
   }
 }
 
 async function getItemsByName(pagination, limit, search) {
+  let isEndOfCollection = false
+
   try {
     const items = await collection
       .find({
@@ -87,7 +95,11 @@ async function getItemsByName(pagination, limit, search) {
       .limit(Number(limit))
       .toArray()
 
-    return items
+    if (items.length < limit) {
+      isEndOfCollection = true
+    }
+
+    return { items, isEndOfCollection }
   } catch (err) {
     console.error(`Something went wrong trying to get documents by phrase ${search}: ${err}\n`)
   }

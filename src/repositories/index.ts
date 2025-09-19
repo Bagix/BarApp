@@ -1,9 +1,9 @@
 import type {
-  IDrink,
   INewDrink,
   IInsertConfirmation,
   IDeleteConfirmation,
   ISelectedFilters,
+  IDrinkCollection,
 } from '@/utils/types'
 
 export class Connector {
@@ -11,7 +11,7 @@ export class Connector {
     pagination: number = 0,
     limit: number = 1,
     filters: ISelectedFilters[],
-  ): Promise<IDrink[]> {
+  ): Promise<IDrinkCollection> {
     const jsonFilters = JSON.stringify(filters)
     const uri = `http://localhost:3000/api/get-items?pagination=${pagination}&limit=${limit}&filters=${jsonFilters}`
     const response = await fetch(uri)
@@ -66,7 +66,7 @@ export class Connector {
     pagination: number = 0,
     limit: number = 1,
     searchPhrase: string,
-  ): Promise<IDrink[]> {
+  ): Promise<IDrinkCollection> {
     const uri = `http://localhost:3000/api/search?search=${searchPhrase}&pagination=${pagination}&limit=${limit}`
     const response = await fetch(uri)
     const data = await response.json()

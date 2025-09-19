@@ -11,6 +11,8 @@ interface IBarState {
   drinkToEdit: IEditDrink | null
   isEditModalVisible: boolean
   searchPhrase: string
+  isEndOfCollection: boolean
+  loadBySearch: boolean
 }
 
 export const useBarStore = defineStore('bar', {
@@ -22,6 +24,8 @@ export const useBarStore = defineStore('bar', {
     drinkToEdit: null,
     isEditModalVisible: false,
     searchPhrase: '',
+    isEndOfCollection: false,
+    loadBySearch: false,
   }),
 
   getters: {},
@@ -32,12 +36,18 @@ export const useBarStore = defineStore('bar', {
     },
 
     async getAllDrinks(limit: number = 2): Promise<void> {
+      if (this.isEndOfCollection) {
+        return
+      }
+
       const filtersStore = useFiltersStore()
       try {
         this.isLoading = true
-        const items = await Connector.getItems(this.pagination, limit, filtersStore.activeFilters)
+        const data = await Connector.getItems(this.pagination, limit, filtersStore.activeFilters)
+        console.log('data z backendu', data)
         this.pagination += limit
-        this.mainItemsList.push(...items)
+        this.mainItemsList.push(...data.items)
+        this.isEndOfCollection = data.isEndOfCollection
       } catch (e) {
         console.error(`There was a problem in getAllDrinks(): ${e}`)
       } finally {
@@ -118,27 +128,34 @@ export const useBarStore = defineStore('bar', {
       }
     },
 
-    async searchByName(limit: number = 6) {
-      try {
-        if (!this.searchPhrase.trim()) {
-          return
-        }
+    async searchByName(limit: number = 2) {
+      if (!this.searchPhrase.trim() || this.isEndOfCollection) {
+        return
+      }
 
-        const items = await Connector.searchItemsByName(this.pagination, limit, this.searchPhrase)
+      try {
+        this.loadBySearch = true
+        this.isLoading = true
+        const data = await Connector.searchItemsByName(this.pagination, limit, this.searchPhrase)
         this.pagination += limit
-        this.mainItemsList.push(...items)
+        this.mainItemsList.push(...data.items)
+        this.isEndOfCollection = data.isEndOfCollection
       } catch (e) {
         console.error(`There was a problem in searchByName(): ${e}`)
+      } finally {
+        this.isLoading = false
       }
     },
 
     resetResults() {
       this.pagination = 0
       this.mainItemsList = []
+      this.isEndOfCollection = false
     },
 
     resetSearchPhrase() {
       this.searchPhrase = ''
+      this.loadBySearch = false
     },
 
     setDrinkToEdit(id: string | null) {

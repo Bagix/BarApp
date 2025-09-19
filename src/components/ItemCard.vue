@@ -59,6 +59,10 @@ const ingredients = props.drink.ingredients
   }
 
   @media (min-width: 1300px) {
+    max-width: 375px;
+  }
+
+  @media (min-width: 2005px) {
     max-width: 400px;
   }
 }

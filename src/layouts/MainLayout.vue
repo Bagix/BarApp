@@ -5,13 +5,19 @@ import InfinitiScrollTrigger from '@/components/InfinitiScrollTrigger.vue'
 import { useFiltersStore } from '@/stores/filters'
 import { onMounted } from 'vue'
 import { useBarStore } from '@/stores/bar'
+import { storeToRefs } from 'pinia'
 
-const store = useBarStore()
-
+const barStore = useBarStore()
+const { loadBySearch } = storeToRefs(barStore)
 const filtersStore = useFiltersStore()
 
 async function handleInfinitiScroll() {
-  await store.getAllDrinks()
+  if (loadBySearch.value) {
+    await barStore.searchByName()
+    return
+  }
+
+  await barStore.getAllDrinks()
 }
 
 function openFilters() {
@@ -19,7 +25,7 @@ function openFilters() {
 }
 
 onMounted(async () => {
-  await store.getAllDrinks()
+  await barStore.getAllDrinks()
 })
 </script>
 
@@ -78,7 +84,6 @@ onMounted(async () => {
   padding: 0 var(--padding) 16px;
   width: 100%;
   gap: var(--gap);
-  justify-content: center;
 
   @media (max-width: 767px) {
     align-items: center;

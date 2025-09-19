@@ -53,6 +53,11 @@ export interface IDeleteConfirmation {
   insertedId: string
 }
 
+export interface IDrinkCollection {
+  items: IDrink[]
+  isEndOfCollection: boolean
+}
+
 export const baseAlcohols = ['Whisky', 'Rum', 'Wódka', 'Gin', 'Likier']
 
 export const flavors = ['Słodki', 'Kwaśny', 'Słodko-kwaśny', 'Wytrawny', 'Orzeźwiający']
