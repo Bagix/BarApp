@@ -28,14 +28,14 @@ async function handleFilter() {
   barStore.resetResults()
   filtersStore.setActiveFilters()
   filtersStore.toogleFilters(false)
-  await barStore.getAllDrinks()
+  await barStore.getAllItems()
 }
 
 async function handleFiltersReset() {
   filtersStore.resetFilters()
   barStore.resetResults()
   filtersStore.toogleFilters(false)
-  await barStore.getAllDrinks()
+  await barStore.getAllItems()
 }
 
 watch(isFiltersVisible, () => {

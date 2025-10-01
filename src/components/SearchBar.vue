@@ -1,16 +1,19 @@
 <script setup lang="ts">
 import FloatLabel from 'primevue/floatlabel'
 import InputText from 'primevue/inputtext'
+import IconField from 'primevue/iconfield'
+import InputIcon from 'primevue/inputicon'
 import { useBarStore } from '@/stores/bar'
 import { storeToRefs } from 'pinia'
 
 const store = useBarStore()
-const { searchPhrase } = storeToRefs(store)
+const { searchPhrase, isLoading, loadBySearch } = storeToRefs(store)
 
 async function handleSearch() {
   if (!searchPhrase.value.trim()) {
     return
   }
+
   store.resetResults()
   await store.searchByName()
 }
@@ -18,45 +21,48 @@ async function handleSearch() {
 async function handleReset() {
   store.resetSearchPhrase()
   store.resetResults()
-  await store.getAllDrinks()
+  await store.getAllItems()
 }
 </script>
 
 <template>
   <div class="search-wrapper">
-    <FloatLabel variant="on" class="search-element">
-      <InputText
-        id="search"
-        v-model="searchPhrase"
-        name="search"
-        class="search-input"
-        @keyup.enter="handleSearch"
-      />
-      <label for="search">Wyszkuj po nazwie</label>
-    </FloatLabel>
-    <div class="btn-wrapper">
-      <UIButton label="Wyszukaj" @click="handleSearch" severity="info" class="btn" />
-      <UIButton
-        label="Wyczyść"
-        @click="handleReset"
-        severity="warn"
-        class="btn"
-        :disabled="!searchPhrase"
-      />
+    <div class="search-with-icon">
+      <FloatLabel variant="on" class="search-element">
+        <IconField>
+          <InputIcon class="pi pi-search" />
+          <InputText
+            id="search"
+            v-model="searchPhrase"
+            name="search"
+            type="search"
+            autocomplete="off"
+            class="search-input"
+            @keyup.enter="handleSearch"
+          />
+        </IconField>
+        <label for="search">Wyszkuj po nazwie</label>
+      </FloatLabel>
+      <UIButton icon="pi pi-search" :disabled="isLoading || !searchPhrase" @click="handleSearch" />
     </div>
+
+    <UIButton
+      icon="pi pi-undo"
+      severity="warn"
+      :disabled="isLoading || !loadBySearch"
+      @click="handleReset"
+    />
   </div>
 </template>
 
 <style scoped>
 .search-wrapper {
   display: flex;
-  flex-direction: column;
-  gap: 24px;
+  gap: 8px;
   width: 100%;
 
   @media (min-width: 1024px) {
-    flex-direction: row;
-    justify-content: center;
+    gap: 16px;
   }
 }
 
@@ -65,13 +71,22 @@ async function handleReset() {
   width: 100%;
 }
 
-.btn-wrapper {
-  display: flex;
-  justify-content: space-between;
-  gap: 32px;
+.clear-icon {
+  cursor: pointer;
+}
 
-  .btn {
-    width: 50%;
+.search-with-icon {
+  display: flex;
+  width: 100%;
+
+  & .p-inputtext {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  & .p-button {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
   }
 }
 </style>

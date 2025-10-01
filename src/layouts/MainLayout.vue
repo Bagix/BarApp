@@ -8,7 +8,7 @@ import { useBarStore } from '@/stores/bar'
 import { storeToRefs } from 'pinia'
 
 const barStore = useBarStore()
-const { loadBySearch } = storeToRefs(barStore)
+const { loadBySearch, mainItemsList } = storeToRefs(barStore)
 const filtersStore = useFiltersStore()
 
 async function handleInfinitiScroll() {
@@ -17,7 +17,7 @@ async function handleInfinitiScroll() {
     return
   }
 
-  await barStore.getAllDrinks()
+  await barStore.getAllItems()
 }
 
 function openFilters() {
@@ -25,7 +25,7 @@ function openFilters() {
 }
 
 onMounted(async () => {
-  await barStore.getAllDrinks()
+  await barStore.getAllItems()
 })
 </script>
 
@@ -46,7 +46,11 @@ onMounted(async () => {
       </div>
 
       <div class="wrapper">
-        <slot name="content" />
+        <div v-if="!mainItemsList.length && loadBySearch" class="empty">
+          <h2>Brak wyników</h2>
+          <p>Spróbuj zmienić kryteria wyszukiwania lub filtry.</p>
+        </div>
+        <slot v-else name="content" />
       </div>
 
       <slot name="modals" />
@@ -103,5 +107,10 @@ onMounted(async () => {
 
 .filter-trigger {
   margin-bottom: 16px;
+}
+
+.empty {
+  width: 100%;
+  text-align: center;
 }
 </style>

@@ -35,7 +35,7 @@ export const useBarStore = defineStore('bar', {
       this.isEditModalVisible = isVisible
     },
 
-    async getAllDrinks(limit: number = 2): Promise<void> {
+    async getAllItems(limit: number = 2): Promise<void> {
       if (this.isEndOfCollection) {
         return
       }
@@ -49,7 +49,7 @@ export const useBarStore = defineStore('bar', {
         this.mainItemsList.push(...data.items)
         this.isEndOfCollection = data.isEndOfCollection
       } catch (e) {
-        console.error(`There was a problem in getAllDrinks(): ${e}`)
+        console.error(`There was a problem in getAllItems(): ${e}`)
       } finally {
         this.isLoading = false
       }
