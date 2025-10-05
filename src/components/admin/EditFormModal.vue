@@ -1,5 +1,3 @@
-import Dialog from 'primevue/dialog';
-
 <script setup lang="ts">
 import Dialog from 'primevue/dialog'
 import EditItemForm from '@/components/admin/EditItemForm.vue'

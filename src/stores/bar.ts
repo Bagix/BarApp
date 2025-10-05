@@ -13,6 +13,8 @@ interface IBarState {
   searchPhrase: string
   isEndOfCollection: boolean
   loadBySearch: boolean
+  selectedItem: IDrink | null
+  isDetailsModalVisible: boolean
 }
 
 export const useBarStore = defineStore('bar', {
@@ -26,6 +28,8 @@ export const useBarStore = defineStore('bar', {
     searchPhrase: '',
     isEndOfCollection: false,
     loadBySearch: false,
+    selectedItem: null,
+    isDetailsModalVisible: false,
   }),
 
   getters: {},
@@ -205,6 +209,16 @@ export const useBarStore = defineStore('bar', {
             type: ingredientParts[1],
           }
         })
+    },
+
+    openDetailsModal(item: IDrink) {
+      this.selectedItem = item
+      this.isDetailsModalVisible = true
+    },
+
+    closeDetailsModal() {
+      this.selectedItem = null
+      this.isDetailsModalVisible = false
     },
   },
 })

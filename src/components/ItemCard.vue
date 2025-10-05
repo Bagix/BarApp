@@ -8,17 +8,9 @@ const ingredients = props.drink.ingredients
 </script>
 
 <template>
-  <div class="item-card">
+  <div class="item-card" @click="$emit('click')">
     <Card class="item">
       <template #title>
-        <div class="badge-wrapper">
-          <Badge :value="props.drink.taste" severity="secondary" class="taste-badge" />
-          <Badge
-            :value="props.drink.color.label"
-            :style="{ background: props.drink.color.value }"
-            class="color-badge"
-          />
-        </div>
         <p class="title">{{ props.drink.name }}</p>
       </template>
       <template #content>
@@ -38,6 +30,14 @@ const ingredients = props.drink.ingredients
           </li>
         </ul>
         <p class="prep">{{ props.drink.preparation }}</p>
+        <div class="badge-wrapper">
+          <Badge :value="props.drink.taste" severity="secondary" class="taste-badge" />
+          <Badge
+            :value="props.drink.color.label"
+            :style="{ background: props.drink.color.value }"
+            class="color-badge"
+          />
+        </div>
       </template>
       <template v-if="$slots.footer" #footer>
         <slot name="footer" />
@@ -53,8 +53,10 @@ const ingredients = props.drink.ingredients
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
+  background-color: rgba(0, 0, 0, 0.65);
+  border-radius: 4px;
 
-  @media (min-width: 767px) {
+  @media (min-width: 768px) {
     max-width: 300px;
   }
 
@@ -90,8 +92,11 @@ const ingredients = props.drink.ingredients
 
 .badge-wrapper {
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 16px;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 32px;
+  padding-top: 16px;
+  border-top: 1px dashed #fff;
 }
 
 .title {
@@ -103,8 +108,14 @@ const ingredients = props.drink.ingredients
 }
 
 .description {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
   text-align: center;
   font-style: italic;
+
   &::first-letter {
     text-transform: capitalize;
   }
@@ -134,6 +145,7 @@ const ingredients = props.drink.ingredients
 
   & li:last-child {
     margin-right: 0;
+
     &::after {
       content: '';
     }
@@ -155,7 +167,12 @@ const ingredients = props.drink.ingredients
 }
 
 .prep {
-  margin-top: 16px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
 }
 
 .taste-badge {
