@@ -48,7 +48,6 @@ export const useBarStore = defineStore('bar', {
       try {
         this.isLoading = true
         const data = await Connector.getItems(this.pagination, limit, filtersStore.activeFilters)
-        console.log('data z backendu', data)
         this.pagination += limit
         this.mainItemsList.push(...data.items)
         this.isEndOfCollection = data.isEndOfCollection

@@ -42,7 +42,22 @@ async function handleSubmit(): Promise<void> {
 
       <Select v-model="drinkToEdit.taste" :options="flavors" placeholder="Smak" checkmark />
 
-      <Select v-model="drinkToEdit.color" :options="colors" placeholder="Kolor" checkmark />
+      <Select v-model="drinkToEdit.color" :options="colors" placeholder="Kolor" checkmark>
+        <template #value="slotProps">
+          <div v-if="slotProps.value">
+            <div>{{ slotProps.value.label }}</div>
+          </div>
+          <span v-else>
+            {{ slotProps.placeholder }}
+          </span>
+        </template>
+        <template #option="slotProps">
+          <div class="flex items-center">
+            <span class="color-ball" />
+            <div>{{ slotProps.option.label }}</div>
+          </div>
+        </template>
+      </Select>
     </div>
 
     <div class="column">

@@ -3,13 +3,16 @@ import SearchBar from '@/components/SearchBar.vue'
 import FiltersWrapper from '@/components/FiltersWrapper.vue'
 import InfinitiScrollTrigger from '@/components/InfinitiScrollTrigger.vue'
 import { useFiltersStore } from '@/stores/filters'
-import { onMounted } from 'vue'
+import { onMounted, ref, useTemplateRef } from 'vue'
 import { useBarStore } from '@/stores/bar'
 import { storeToRefs } from 'pinia'
 
 const barStore = useBarStore()
 const { loadBySearch, mainItemsList } = storeToRefs(barStore)
 const filtersStore = useFiltersStore()
+const lastScrollTop = ref(0)
+
+const topBar = useTemplateRef('top-bar')
 
 async function handleInfinitiScroll() {
   if (loadBySearch.value) {
@@ -24,8 +27,27 @@ function openFilters() {
   filtersStore.toogleFilters(true)
 }
 
+function handleScroll() {
+  const currentOffset = window.pageYOffset
+  console.log(window.scrollY)
+  if (!topBar.value || currentOffset < 100) {
+    return
+  }
+
+  if (currentOffset > lastScrollTop.value) {
+    // downscroll code
+    topBar.value.classList.add('hide')
+  } else {
+    // upscroll code
+    topBar.value.classList.remove('hide')
+  }
+
+  lastScrollTop.value = currentOffset <= 0 ? 0 : currentOffset // For Mobile or negative scrolling
+}
+
 onMounted(async () => {
   await barStore.getAllItems()
+  window.addEventListener('scroll', handleScroll)
 })
 </script>
 
@@ -34,7 +56,7 @@ onMounted(async () => {
     <FiltersWrapper class="filters" />
 
     <main class="content">
-      <div class="top-bar">
+      <div ref="top-bar" class="top-bar">
         <UIButton
           label="Filtruj"
           @click="openFilters"
@@ -104,6 +126,11 @@ onMounted(async () => {
   background: var(--main-background-color);
   border-bottom: 2px solid #444;
   z-index: 1;
+  transition: transform 0.3s ease-in-out;
+
+  &.hide {
+    transform: translateY(-100%);
+  }
 }
 
 .filter-trigger {

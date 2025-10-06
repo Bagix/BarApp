@@ -55,7 +55,7 @@ async function handleSubmit(): Promise<void> {
 
       <Select v-model="formModel.color" :options="colors" placeholder="Kolor">
         <template #value="slotProps">
-          <div v-if="slotProps.value" class="flex items-center">
+          <div v-if="slotProps.value">
             <!-- <span class="color-ball" :style="'background': slotProps.value.value" /> -->
             <div>{{ slotProps.value.label }}</div>
           </div>
