@@ -10,7 +10,6 @@ const store = useBarStore()
 const { mainItemsList } = storeToRefs(store)
 
 function handleClick(item: IDrink) {
-  console.log('------', item)
   store.openDetailsModal(item)
 }
 </script>

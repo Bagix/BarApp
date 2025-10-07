@@ -15,6 +15,7 @@ interface IBarState {
   loadBySearch: boolean
   selectedItem: IDrink | null
   isDetailsModalVisible: boolean
+  perPage: number
 }
 
 export const useBarStore = defineStore('bar', {
@@ -30,6 +31,7 @@ export const useBarStore = defineStore('bar', {
     loadBySearch: false,
     selectedItem: null,
     isDetailsModalVisible: false,
+    perPage: 5,
   }),
 
   getters: {},
@@ -39,7 +41,35 @@ export const useBarStore = defineStore('bar', {
       this.isEditModalVisible = isVisible
     },
 
-    async getAllItems(limit: number = 2): Promise<void> {
+    calculateItemsPerPage(containerWidth: number, containerHeight: number): Promise<void> {
+      return new Promise((resolve) => {
+        let itemWidth: number
+
+        switch (true) {
+          case window.innerWidth >= 2005:
+            itemWidth = 400
+            break
+          case window.innerWidth >= 1300:
+            itemWidth = 375
+            break
+          case window.innerWidth >= 576:
+            itemWidth = 300
+            break
+          default:
+            itemWidth = containerWidth
+        }
+
+        console.log('Item width:', containerWidth, itemWidth, window.innerWidth)
+
+        const itemsAmount =
+          Math.floor(containerWidth / itemWidth) * (Math.floor(containerHeight / 550) + 1)
+        this.perPage = itemsAmount < 5 ? 5 : itemsAmount
+        console.log('elo', itemsAmount, this.perPage)
+        resolve()
+      })
+    },
+
+    async getAllItems(): Promise<void> {
       if (this.isEndOfCollection) {
         return
       }
@@ -47,8 +77,12 @@ export const useBarStore = defineStore('bar', {
       const filtersStore = useFiltersStore()
       try {
         this.isLoading = true
-        const data = await Connector.getItems(this.pagination, limit, filtersStore.activeFilters)
-        this.pagination += limit
+        const data = await Connector.getItems(
+          this.pagination,
+          this.perPage,
+          filtersStore.activeFilters,
+        )
+        this.pagination += this.perPage
         this.mainItemsList.push(...data.items)
         this.isEndOfCollection = data.isEndOfCollection
       } catch (e) {

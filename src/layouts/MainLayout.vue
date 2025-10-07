@@ -12,6 +12,7 @@ const { loadBySearch, mainItemsList } = storeToRefs(barStore)
 const filtersStore = useFiltersStore()
 const lastScrollTop = ref(0)
 
+const wrapperElement = useTemplateRef('wrapper-element')
 const topBar = useTemplateRef('top-bar')
 
 async function handleInfinitiScroll() {
@@ -29,7 +30,7 @@ function openFilters() {
 
 function handleScroll() {
   const currentOffset = window.pageYOffset
-  console.log(window.scrollY)
+
   if (!topBar.value || currentOffset < 100) {
     return
   }
@@ -45,9 +46,22 @@ function handleScroll() {
   lastScrollTop.value = currentOffset <= 0 ? 0 : currentOffset // For Mobile or negative scrolling
 }
 
+async function prepareItemsSettings() {
+  if (!wrapperElement.value) {
+    return
+  }
+
+  const wrapperWidth = wrapperElement.value.getBoundingClientRect().width - 32 // 32 is padding from both sides
+  const wrapperHeight = window.innerHeight - (topBar?.value?.getBoundingClientRect().height ?? 0)
+
+  await barStore.calculateItemsPerPage(wrapperWidth, wrapperHeight)
+}
+
 onMounted(async () => {
+  await prepareItemsSettings()
   await barStore.getAllItems()
   window.addEventListener('scroll', handleScroll)
+  window.addEventListener('resize', prepareItemsSettings)
 })
 </script>
 
@@ -67,7 +81,7 @@ onMounted(async () => {
         <SearchBar />
       </div>
 
-      <div class="wrapper">
+      <div ref="wrapper-element" class="wrapper">
         <div v-if="!mainItemsList.length && loadBySearch" class="empty">
           <h2>Brak wyników</h2>
           <p>Spróbuj zmienić kryteria wyszukiwania lub filtry.</p>
@@ -112,7 +126,7 @@ onMounted(async () => {
   width: 100%;
   gap: var(--gap);
 
-  @media (max-width: 767px) {
+  @media (max-width: 576px) {
     align-items: center;
     flex-direction: column;
   }

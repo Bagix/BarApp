@@ -56,7 +56,7 @@ const ingredients = props.drink.ingredients
   background-color: rgba(0, 0, 0, 0.65);
   border-radius: 4px;
 
-  @media (min-width: 768px) {
+  @media (min-width: 576px) {
     max-width: 300px;
   }
 
