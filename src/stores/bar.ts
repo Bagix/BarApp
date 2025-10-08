@@ -59,12 +59,10 @@ export const useBarStore = defineStore('bar', {
             itemWidth = containerWidth
         }
 
-        console.log('Item width:', containerWidth, itemWidth, window.innerWidth)
-
         const itemsAmount =
           Math.floor(containerWidth / itemWidth) * (Math.floor(containerHeight / 550) + 1)
         this.perPage = itemsAmount < 5 ? 5 : itemsAmount
-        console.log('elo', itemsAmount, this.perPage)
+
         resolve()
       })
     },

@@ -1,10 +1,8 @@
-
 import Express from 'express'
 import { MongoClient, ObjectId } from 'mongodb'
 import cors from 'cors'
 import bodyParser from 'body-parser'
-import CONNETCTION_STRING from '../config/Config.js'
-
+import { CONNETCTION_STRING } from '../config/Config.js'
 
 const app = Express()
 app.use(cors())
@@ -12,11 +10,31 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 const port = process.env.port || 3000
-app.listen(port)
 
 const client = new MongoClient(CONNETCTION_STRING)
-const database = client.db('cocktailapp')
-const collection = database.collection('cocktails')
+let database, collection
+
+async function startServer() {
+  try {
+    await client.connect()
+    database = client.db('cocktailapp')
+    collection = database.collection('cocktails')
+    app.listen(port, () => {
+      console.log(`Server started on port ${port}`)
+    })
+  } catch (err) {
+    console.error('Failed to connect to MongoDB:', err)
+    process.exit(1)
+  }
+}
+
+startServer()
+
+process.on('SIGINT', async () => {
+  console.log('Closing MongoDB connection...')
+  await client.close()
+  process.exit(0)
+})
 
 /**
  * --------------------- API END POINTS ---------------------
