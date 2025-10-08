@@ -1,7 +1,10 @@
+
 import Express from 'express'
 import { MongoClient, ObjectId } from 'mongodb'
 import cors from 'cors'
 import bodyParser from 'body-parser'
+import CONNETCTION_STRING from '../config/Config.js'
+
 
 const app = Express()
 app.use(cors())
@@ -10,9 +13,6 @@ app.use(bodyParser.json())
 
 const port = process.env.port || 3000
 app.listen(port)
-
-const CONNETCTION_STRING =
-  'mongodb+srv://borsuk1253:0YUxMmPzz83p9xdO@cluster0.ek76qvf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
 
 const client = new MongoClient(CONNETCTION_STRING)
 const database = client.db('cocktailapp')
