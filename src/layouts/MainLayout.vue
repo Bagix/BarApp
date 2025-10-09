@@ -71,13 +71,11 @@ onMounted(async () => {
 
     <main class="content">
       <div ref="top-bar" class="top-bar">
-        <UIButton
-          label="Filtruj"
-          @click="openFilters"
-          severity="secondary"
-          icon="pi pi-filter"
-          class="filter-trigger"
-        />
+        <div class="btn-wrapper">
+          <UIButton label="Filtruj" @click="openFilters" severity="secondary" icon="pi pi-filter" />
+
+          <slot name="topBarContent" />
+        </div>
         <SearchBar />
       </div>
 
@@ -147,7 +145,9 @@ onMounted(async () => {
   }
 }
 
-.filter-trigger {
+.btn-wrapper {
+  display: flex;
+  justify-content: space-between;
   margin-bottom: 16px;
 }
 

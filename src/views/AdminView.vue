@@ -7,6 +7,8 @@ import MainLayout from '@/layouts/MainLayout.vue'
 import { ref } from 'vue'
 import { useBarStore } from '@/stores/bar'
 import { storeToRefs } from 'pinia'
+import { getAuth, signOut } from 'firebase/auth'
+import router from '@/router'
 
 const store = useBarStore()
 const { mainItemsList } = storeToRefs(store)
@@ -16,10 +18,23 @@ const isOpen = ref(false)
 function handleToggle() {
   isOpen.value = !isOpen.value
 }
+
+async function handleLogout() {
+  try {
+    const auth = getAuth()
+    await signOut(auth)
+    router.push({ path: '/' })
+  } catch (err) {
+    console.error(err)
+  }
+}
 </script>
 
 <template>
   <MainLayout>
+    <template #topBarContent>
+      <UIButton label="Wyloguj" severity="danger" icon="pi pi-sign-out" @click="handleLogout" />
+    </template>
     <template #content>
       <div class="add-form-wrapper" :class="{ 'is-open': isOpen }">
         <UIButton label="Zwiń/Rozwiń Formularz" class="toggle-btn" @click="handleToggle" />

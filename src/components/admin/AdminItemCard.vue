@@ -7,7 +7,6 @@ const store = useBarStore()
 const confirm = useConfirm()
 
 const props = defineProps(['drink'])
-// const emit = defineEmits(['edit', 'delete'])
 
 function handleEdit() {
   store.setDrinkToEdit(props.drink._id)

@@ -227,12 +227,14 @@ export const useBarStore = defineStore('bar', {
         .trim()
         .split(',')
         .map((el) => el.trim())
+        .filter((el) => el !== '')
     },
 
     prepareIngredients(rawIngredients: string) {
       return rawIngredients
         .trim()
         .split(',')
+        .filter((el) => el.trim() !== '')
         .map((ingredient) => {
           const ingredientParts = ingredient.trim().split(' ')
           return {

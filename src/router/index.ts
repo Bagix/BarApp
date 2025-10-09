@@ -47,7 +47,7 @@ const getCurrentUser = () => {
 
 router.beforeEach(async (to, from, next) => {
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth)
-  const isAuthenticated = await getCurrentUser() // TODO: Replace with real authentication check
+  const isAuthenticated = await getCurrentUser()
 
   if (requiresAuth && !isAuthenticated) {
     next('/login')
