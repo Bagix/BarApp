@@ -9,14 +9,14 @@ const { isEditModalVisible } = storeToRefs(store)
 </script>
 
 <template>
-  <Dialog v-model:visible="isEditModalVisible" modal class="edit-modal">
+  <Dialog id="edit-modal" v-model:visible="isEditModalVisible" modal>
     <template #header> <h2>Edycja</h2> </template>
     <EditItemForm />
   </Dialog>
 </template>
 
 <style>
-.edit-modal {
+#edit-modal {
   width: 100%;
 
   @media (min-width: 768px) {
@@ -26,9 +26,9 @@ const { isEditModalVisible } = storeToRefs(store)
   @media (min-width: 1024px) {
     width: 50%;
   }
-}
 
-.form {
-  margin: auto;
+  .form {
+    margin: auto;
+  }
 }
 </style>

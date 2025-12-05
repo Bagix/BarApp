@@ -2,13 +2,25 @@
 import Card from 'primevue/card'
 import Badge from 'primevue/badge'
 
-const props = defineProps(['drink'])
+const props = defineProps(['drink', 'index'])
+const emits = defineEmits(['click'])
 const tools = props.drink.tools
 const ingredients = props.drink.ingredients
+
+function handleClick() {
+  // Emit an event to the parent component when the card is clicked
+  // You can pass any data you want with the event
+  // For example, passing the drink object
+  emits('click')
+}
 </script>
 
 <template>
-  <div class="item-card" @click="$emit('click')">
+  <div
+    class="item-card"
+    @click="handleClick"
+    :style="`background-image: url(http://localhost:5173/src/assets/images/test.jpg)`"
+  >
     <Card class="item">
       <template #title>
         <p class="title">{{ props.drink.name }}</p>
@@ -49,7 +61,7 @@ const ingredients = props.drink.ingredients
 <style scoped>
 .item-card {
   width: 100%;
-  background: url(../assets/images/test.jpg);
+  /* background-image: url(../assets/images/test.jpg); */
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;

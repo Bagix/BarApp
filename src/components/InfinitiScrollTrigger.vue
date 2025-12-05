@@ -37,7 +37,7 @@ onMounted(() => {
   </div>
 </template>
 
-<style>
+<style scoped>
 .trigger-wrapper {
   width: 100%;
   display: flex;

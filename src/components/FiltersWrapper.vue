@@ -52,7 +52,7 @@ onBeforeMount(() => {
 </script>
 
 <template>
-  <Drawer class="filters-wrapper" v-model:visible="isFiltersVisible" header="Filtry">
+  <Drawer id="filters-wrapper" v-model:visible="isFiltersVisible" header="Filtry">
     <div class="filters-group" v-for="filtersGroup in baseFilters" :key="filtersGroup.name">
       <p class="title">{{ filtersGroup.displayName }}</p>
       <div class="options">
@@ -82,52 +82,52 @@ onBeforeMount(() => {
 </template>
 
 <style>
-div.filters-wrapper {
+#filters-wrapper {
   border-right: 1px solid var(--secondary-color);
-}
 
-div.p-drawer-content {
-  display: flex;
-  flex-direction: column;
-  padding-bottom: 0;
-  gap: 24px;
-  position: relative;
-}
-
-.title {
-  margin-bottom: 8px;
-}
-
-.options {
-  padding-left: 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.single-option {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  width: fit-content;
-  padding-right: 15px;
-
-  & .checkbox {
-    width: 20px;
-    height: 20px;
+  div.p-drawer-content {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 0;
+    gap: 24px;
+    position: relative;
   }
-}
 
-.filters-btn-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin: 0 -23px 0 -24px;
-  padding: 24px;
-  position: sticky;
-  bottom: 0;
-  border-top: 1px solid var(--secondary-color);
-  background: #18181b;
+  .title {
+    margin-bottom: 8px;
+  }
+
+  .options {
+    padding-left: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .single-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    width: fit-content;
+    padding-right: 15px;
+
+    & .checkbox {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  .filters-btn-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin: 0 -23px 0 -24px;
+    padding: 24px;
+    position: sticky;
+    bottom: 0;
+    border-top: 1px solid var(--secondary-color);
+    background: #18181b;
+  }
 }
 </style>

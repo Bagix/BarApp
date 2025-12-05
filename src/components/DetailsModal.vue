@@ -9,9 +9,9 @@ const { isDetailsModalVisible, selectedItem } = storeToRefs(store)
 </script>
 
 <template>
-  <Dialog v-model:visible="isDetailsModalVisible" modal class="details-modal">
+  <Dialog id="details-modal" v-model:visible="isDetailsModalVisible" modal>
     <template #header>
-      <h2>{{ selectedItem?.name }}</h2>
+      <p class="title">{{ selectedItem?.name }}</p>
     </template>
     <div class="content">
       <div class="image-box">
@@ -48,87 +48,121 @@ const { isDetailsModalVisible, selectedItem } = storeToRefs(store)
   </Dialog>
 </template>
 
-<style scoped>
-.content {
-  @media (min-width: 768px) {
-    display: flex;
-    flex-direction: row-reverse;
-    gap: 64px;
-  }
-}
-.image-box {
-  height: 500px;
-  display: flex;
-  justify-content: center;
-  margin-bottom: 24px;
-
-  @media (min-width: 1600px) {
-    height: 700px;
-  }
-
-  img {
-    width: auto;
-    height: 100%;
-    object-fit: cover;
-  }
-}
-
-.description {
-  margin-bottom: 32px;
-  font-style: italic;
-  text-align: center;
-}
-
-.tools {
-  display: flex;
-
-  & span {
-    margin-right: 5px;
-  }
-}
-
-.tools-list {
-  list-style: none;
-  display: flex;
-
-  & li {
-    margin-right: 5px;
-
-    &::after {
-      content: ',';
-      display: inline;
-    }
-  }
-
-  & li:last-child {
-    margin-right: 0;
-
-    &::after {
-      content: '';
-    }
-  }
-}
-
-.ingredients {
-  margin: 32px 0;
-  list-style: none;
-  padding: 0 16px;
-
-  & li {
+<style>
+#details-modal {
+  .p-dialog-header {
     border-bottom: 1px solid #fff;
-    margin-bottom: 12px;
-    padding-left: 16px;
-    padding-bottom: 3px;
-    font-size: 16px;
-  }
-}
+    padding: 12px 24px;
 
-.badge-wrapper {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  margin-top: 32px;
-  padding-top: 16px;
-  border-top: 1px dashed #fff;
+    @media (min-width: 768px) {
+      padding: 24px;
+    }
+
+    .title {
+      font-size: 18px;
+      font-weight: bold;
+
+      @media (min-width: 768px) {
+        font-size: 24px;
+      }
+    }
+  }
+
+  .content {
+    padding-top: 16px;
+
+    @media (min-width: 768px) {
+      display: flex;
+      flex-direction: row-reverse;
+      gap: 64px;
+    }
+  }
+
+  .text {
+    margin-top: 16px;
+
+    @media (min-width: 768px) {
+      margin-top: 0;
+    }
+  }
+
+  .image-box {
+    max-width: 400px;
+    max-height: 500px;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 24px;
+    margin: auto;
+
+    @media (min-width: 1920px) {
+      max-height: unset;
+      max-width: 50%;
+    }
+
+    img {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+    }
+  }
+
+  .description {
+    margin-bottom: 32px;
+    font-style: italic;
+    text-align: center;
+  }
+
+  .tools {
+    display: flex;
+
+    & span {
+      margin-right: 5px;
+    }
+  }
+
+  .tools-list {
+    list-style: none;
+    display: flex;
+
+    & li {
+      margin-right: 5px;
+
+      &::after {
+        content: ',';
+        display: inline;
+      }
+    }
+
+    & li:last-child {
+      margin-right: 0;
+
+      &::after {
+        content: '';
+      }
+    }
+  }
+
+  .ingredients {
+    margin: 32px 0;
+    list-style: none;
+    padding: 0 16px;
+
+    & li {
+      border-bottom: 1px solid #fff;
+      margin-bottom: 12px;
+      padding-left: 16px;
+      padding-bottom: 3px;
+      font-size: 16px;
+    }
+  }
+
+  .badge-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 32px;
+    padding-top: 16px;
+    border-top: 1px dashed #fff;
+  }
 }
 </style>
