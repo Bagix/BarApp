@@ -8,9 +8,6 @@ const tools = props.drink.tools
 const ingredients = props.drink.ingredients
 
 function handleClick() {
-  // Emit an event to the parent component when the card is clicked
-  // You can pass any data you want with the event
-  // For example, passing the drink object
   emits('click')
 }
 </script>

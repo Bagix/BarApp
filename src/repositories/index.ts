@@ -34,7 +34,7 @@ export class Connector {
     return data
   }
 
-  static async editItem(item: INewDrink): Promise<IInsertConfirmation> {
+  static async editItem(item: INewDrink): Promise<void> {
     const uri = 'http://localhost:3000/api/edit'
     const response = await fetch(uri, {
       method: 'PUT',
@@ -44,8 +44,7 @@ export class Connector {
       },
     })
 
-    const data = await response.json()
-    return data
+    await response.json()
   }
 
   static async deleteItem(id: string): Promise<IDeleteConfirmation> {

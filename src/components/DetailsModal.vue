@@ -83,6 +83,8 @@ const { isDetailsModalVisible, selectedItem } = storeToRefs(store)
 
     @media (min-width: 768px) {
       margin-top: 0;
+      min-width: 50%;
+      max-width: 50%;
     }
   }
 
