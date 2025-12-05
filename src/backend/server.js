@@ -1,8 +1,11 @@
+import dotenv from 'dotenv'
+dotenv.config()
+
 import Express from 'express'
 import { MongoClient, ObjectId } from 'mongodb'
 import cors from 'cors'
 import bodyParser from 'body-parser'
-import { CONNETCTION_STRING } from '../config/Config.js'
+// import { CONNETCTION_STRING } from '../config/Config.js'
 
 const app = Express()
 app.use(cors())
@@ -10,8 +13,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 const port = process.env.port || 3000
-
-const client = new MongoClient(CONNETCTION_STRING)
+const client = new MongoClient(process.env.CONNECTION_STRING)
 let database, collection
 let server // will hold http server instance
 
@@ -46,7 +48,9 @@ async function shutdown(code = 0) {
       // in recent drivers, isConnected may not exist; attempt close anyway
       try {
         await client.close()
-      } catch (e) {}
+      } catch (e) {
+        console.error('Error closing MongoDB client:', e)
+      }
     }
   } catch (err) {
     console.error('Error during shutdown:', err)
