@@ -12,7 +12,7 @@ app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-const port = process.env.port || 3000
+const port = process.env.PORT || 3000
 const client = new MongoClient(process.env.CONNECTION_STRING)
 let database, collection
 let server // will hold http server instance
