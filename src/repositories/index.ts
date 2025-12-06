@@ -1,3 +1,4 @@
+import { backendBaseUrl } from '@/config'
 import type {
   INewDrink,
   IInsertConfirmation,
@@ -13,7 +14,7 @@ export class Connector {
     filters: ISelectedFilters[],
   ): Promise<IDrinkCollection> {
     const jsonFilters = JSON.stringify(filters)
-    const uri = `http://localhost:3000/api/get-items?pagination=${pagination}&limit=${limit}&filters=${jsonFilters}`
+    const uri = `${backendBaseUrl}/api/get-items?pagination=${pagination}&limit=${limit}&filters=${jsonFilters}`
     const response = await fetch(uri)
     const data = await response.json()
 
@@ -21,7 +22,7 @@ export class Connector {
   }
 
   static async addItem(item: INewDrink): Promise<IInsertConfirmation> {
-    const uri = 'http://localhost:3000/api/add'
+    const uri = `${backendBaseUrl}/api/add`
     const response = await fetch(uri, {
       method: 'POST',
       body: JSON.stringify(item),
@@ -35,7 +36,7 @@ export class Connector {
   }
 
   static async editItem(item: INewDrink): Promise<void> {
-    const uri = 'http://localhost:3000/api/edit'
+    const uri = `${backendBaseUrl}/api/edit`
     const response = await fetch(uri, {
       method: 'PUT',
       body: JSON.stringify(item),
@@ -48,7 +49,7 @@ export class Connector {
   }
 
   static async deleteItem(id: string): Promise<IDeleteConfirmation> {
-    const uri = `http://localhost:3000/api/delete`
+    const uri = `${backendBaseUrl}/api/delete`
     const response = await fetch(uri, {
       method: 'DELETE',
       body: JSON.stringify({ id }),
@@ -66,7 +67,7 @@ export class Connector {
     limit: number = 1,
     searchPhrase: string,
   ): Promise<IDrinkCollection> {
-    const uri = `http://localhost:3000/api/search?search=${searchPhrase}&pagination=${pagination}&limit=${limit}`
+    const uri = `${backendBaseUrl}/api/search?search=${searchPhrase}&pagination=${pagination}&limit=${limit}`
     const response = await fetch(uri)
     const data = await response.json()
 
