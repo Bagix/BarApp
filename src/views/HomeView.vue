@@ -18,10 +18,9 @@ function handleClick(item: IDrink) {
   <MainLayout>
     <template #content>
       <ItemCard
-        v-for="(item, index) in mainItemsList"
+        v-for="item in mainItemsList"
         :key="item._id"
         :drink="item"
-        :index="index"
         @click="handleClick(item)"
       />
     </template>

@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import Card from 'primevue/card'
 import Badge from 'primevue/badge'
+import type { IDrink } from '@/utils/types'
+import { computed } from 'vue'
 
-const props = defineProps(['drink', 'index'])
+const props = defineProps<{ drink: IDrink }>()
 const emits = defineEmits(['click'])
-const tools = props.drink.tools
-const ingredients = props.drink.ingredients
+const tools = computed(() => props.drink?.tools ?? [])
+const ingredients = computed(() => props.drink?.ingredients ?? [])
 
 function handleClick() {
   emits('click')
@@ -15,8 +17,11 @@ function handleClick() {
 <template>
   <div
     class="item-card"
+    role="button"
+    tabindex="0"
     @click="handleClick"
-    :style="`background-image: url(http://localhost:5173/src/assets/images/test.jpg)`"
+    @keydown.enter.prevent="handleClick"
+    @keydown.space.prevent="handleClick"
   >
     <Card class="item">
       <template #title>
@@ -58,11 +63,6 @@ function handleClick() {
 <style scoped>
 .item-card {
   width: 100%;
-  /* background-image: url(../assets/images/test.jpg); */
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-color: rgba(0, 0, 0, 0.65);
   border-radius: 4px;
 
   @media (min-width: 576px) {
@@ -79,24 +79,9 @@ function handleClick() {
 }
 .item {
   font-size: 16px;
-  /* width: 100%; */
   height: 100%;
   border: 1px solid var(--secondary-color);
   box-shadow: 0px 1px 3px 2px #222831;
-  /* position: relative; */
-  background-color: rgba(0, 0, 0, 0.65);
-  /* background: url(../assets/images/test.jpg);
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center; */
-
-  /* @media (min-width: 767px) {
-    max-width: 300px;
-  }
-
-  @media (min-width: 1300px) {
-    max-width: 400px;
-  } */
 }
 
 .badge-wrapper {

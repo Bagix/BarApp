@@ -14,9 +14,6 @@ const { isDetailsModalVisible, selectedItem } = storeToRefs(store)
       <p class="title">{{ selectedItem?.name }}</p>
     </template>
     <div class="content">
-      <div class="image-box">
-        <img src="http://localhost:5173/src/assets/images/test.jpg" alt="test" />
-      </div>
       <div class="text">
         <p class="description">{{ selectedItem?.description }}</p>
         <div class="tools">
@@ -70,6 +67,7 @@ const { isDetailsModalVisible, selectedItem } = storeToRefs(store)
 
   .content {
     padding-top: 16px;
+    width: 100%;
 
     @media (min-width: 768px) {
       display: flex;
@@ -79,32 +77,14 @@ const { isDetailsModalVisible, selectedItem } = storeToRefs(store)
   }
 
   .text {
-    margin-top: 16px;
+    width: 75vw;
 
     @media (min-width: 768px) {
-      margin-top: 0;
-      min-width: 50%;
-      max-width: 50%;
-    }
-  }
-
-  .image-box {
-    max-width: 400px;
-    max-height: 500px;
-    display: flex;
-    justify-content: center;
-    margin-bottom: 24px;
-    margin: auto;
-
-    @media (min-width: 1920px) {
-      max-height: unset;
-      max-width: 50%;
+      width: 50vw;
     }
 
-    img {
-      width: 100%;
-      height: auto;
-      object-fit: cover;
+    @media (min-width: 1600px) {
+      width: 33vw;
     }
   }
 
