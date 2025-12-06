@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import type { ISelectedFilters } from '@/utils/types'
-import { filtersSeparator } from '@/utils/utils'
+import { filtersSeparator } from '@/utils/myutils'
 
 interface IFiltersState {
   filters: ISelectedFilters[]
