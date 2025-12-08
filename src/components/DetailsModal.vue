@@ -71,6 +71,7 @@ const { isDetailsModalVisible, selectedItem } = storeToRefs(store)
   .content {
     padding-top: 16px;
     width: 100%;
+    max-width: 1000px;
 
     @media (min-width: 768px) {
       display: flex;
