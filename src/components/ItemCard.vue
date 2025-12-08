@@ -8,6 +8,17 @@ const props = defineProps<{ drink: IDrink }>()
 const emits = defineEmits(['click'])
 const tools = computed(() => props.drink?.tools ?? [])
 const ingredients = computed(() => props.drink?.ingredients ?? [])
+const hasImage = computed(() => Boolean(props.drink.image))
+
+const style = computed(() => {
+  if (!hasImage.value) {
+    return {}
+  }
+
+  return {
+    backgroundImage: `url(${props.drink.image})`,
+  }
+})
 
 function handleClick() {
   emits('click')
@@ -17,11 +28,13 @@ function handleClick() {
 <template>
   <div
     class="item-card"
+    :class="{ 'has-image': hasImage }"
     role="button"
     tabindex="0"
     @click="handleClick"
     @keydown.enter.prevent="handleClick"
     @keydown.space.prevent="handleClick"
+    :style="style"
   >
     <Card class="item">
       <template #title>
@@ -65,6 +78,25 @@ function handleClick() {
   width: 100%;
   border-radius: 4px;
 
+  &.has-image {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+
+    .item {
+      background: rgba(0, 0, 0, 0.6);
+    }
+  }
+
+  &:not(.admin-card) {
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+
+    &:hover {
+      transform: scale(1.03);
+    }
+  }
+
   @media (min-width: 576px) {
     max-width: 300px;
   }
@@ -77,6 +109,7 @@ function handleClick() {
     max-width: 400px;
   }
 }
+
 .item {
   font-size: 16px;
   height: 100%;

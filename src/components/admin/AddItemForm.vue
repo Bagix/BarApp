@@ -3,12 +3,15 @@ import FloatLabel from 'primevue/floatlabel'
 import InputText from 'primevue/inputtext'
 import Textarea from 'primevue/textarea'
 import Select from 'primevue/select'
+import FileUpload from 'primevue/fileupload'
 import { useBarStore } from '@/stores/bar'
 import { colors, type INewDrinkRaw, flavors, baseAlcohols } from '@/utils/types'
 import { storeToRefs } from 'pinia'
+import { useTemplateRef } from 'vue'
 
 const store = useBarStore()
 const { isLoadingAdminPanel } = storeToRefs(store)
+const fileUpload = useTemplateRef<HTMLInputElement>('fileupload')
 
 const formModel: INewDrinkRaw = {
   name: '',
@@ -22,7 +25,12 @@ const formModel: INewDrinkRaw = {
 }
 
 async function handleSubmit(): Promise<void> {
-  console.log('kurwa', formModel)
+  const image = fileUpload?.value?.files?.[0]
+
+  if (image) {
+    formModel.image = image
+  }
+
   await store.addDrink(formModel)
 }
 </script>
@@ -73,6 +81,8 @@ async function handleSubmit(): Promise<void> {
     </div>
 
     <div class="column">
+      <FileUpload ref="fileupload" mode="basic" name="demo[]" accept="image/*" customUpload />
+
       <FloatLabel variant="on" class="textarea-element">
         <Textarea id="description" v-model="formModel.description" style="resize: none" required />
         <label for="description">Opis</label>

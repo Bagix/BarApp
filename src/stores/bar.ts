@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia'
 import { Connector } from '@/repositories'
-import type { IDrink, IEditDrink, INewDrinkRaw } from '@/utils/types'
+import type { IDrink, IEditDrink, INewDrink, INewDrinkRaw } from '@/utils/types'
 import { useFiltersStore } from '@/stores/filters'
+import { cloundinaryName } from '@/config'
 
 interface IBarState {
   mainItemsList: IDrink[]
@@ -97,7 +98,7 @@ export const useBarStore = defineStore('bar', {
         const ingredients = this.prepareIngredients(data.ingredients)
         const tools = this.prepareTools(data.tools)
 
-        const preparedData = {
+        const preparedData: INewDrink = {
           name: data.name,
           baseAlcohol: data.baseAlcohol,
           description: data.description,
@@ -108,12 +109,32 @@ export const useBarStore = defineStore('bar', {
           tools,
         }
 
+        if (data.image) {
+          preparedData.image = await this.uploadImage(data.image)
+        }
+
         await Connector.addItem(preparedData)
       } catch (e) {
         console.error(`There was a problem in addDrink(): ${e}`)
       } finally {
         this.isLoadingAdminPanel = false
       }
+    },
+
+    async uploadImage(imageData: File): Promise<string> {
+      const formData = new FormData()
+      formData.append('file', imageData)
+      formData.append('upload_preset', 'bar_app_preset')
+      formData.append('folder', 'vue_uploads')
+      const uploadURL = `https://api.cloudinary.com/v1_1/${cloundinaryName}/image/upload`
+
+      const rawImageData = await fetch(uploadURL, {
+        method: 'POST',
+        body: formData,
+      })
+
+      const data = await rawImageData.json()
+      return data.secure_url
     },
 
     async deleteItem(id: string) {

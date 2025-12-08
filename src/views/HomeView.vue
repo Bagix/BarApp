@@ -30,13 +30,4 @@ function handleClick(item: IDrink) {
   </MainLayout>
 </template>
 
-<style scoped>
-.item-card:not(.admin-card) {
-  cursor: pointer;
-  transition: transform 0.2s ease-in-out;
-
-  &:hover {
-    transform: scale(1.03);
-  }
-}
-</style>
+<style scoped></style>

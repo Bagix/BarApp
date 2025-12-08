@@ -8,3 +8,4 @@ export const firebaseConfig = {
 }
 
 export const backendBaseUrl = import.meta.env.VITE_BACKEND_BASE_URL
+export const cloundinaryName = import.meta.env.VITE_CLOUNDINARY_NAME

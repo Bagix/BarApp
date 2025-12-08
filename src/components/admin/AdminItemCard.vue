@@ -34,7 +34,7 @@ function handleDelete() {
 </script>
 
 <template>
-  <ItemCard :drink="props.drink" class="card">
+  <ItemCard :drink="props.drink" class="admin-card">
     <template #footer>
       <div class="buttons">
         <UIButton label="Edytuj" severity="help" @click="handleEdit" />

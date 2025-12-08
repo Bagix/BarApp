@@ -38,7 +38,7 @@ async function handleLogout() {
     <template #content>
       <div class="add-form-wrapper" :class="{ 'is-open': isOpen }">
         <UIButton label="Zwiń/Rozwiń Formularz" class="toggle-btn" @click="handleToggle" />
-        <AddItemForm />
+        <AddItemForm class="form" />
       </div>
       <AdminItemCard v-for="drink in mainItemsList" :key="drink._id" :drink="drink" />
     </template>
@@ -60,6 +60,10 @@ async function handleLogout() {
 
   .toggle-btn {
     display: block;
+    margin: auto;
+  }
+
+  .form {
     margin: auto;
   }
 

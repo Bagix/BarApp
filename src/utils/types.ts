@@ -15,6 +15,7 @@ export interface INewDrinkRaw {
   tools: string
   taste: string
   color: IColor | null
+  image?: File
 }
 
 export interface IColor {
@@ -31,6 +32,7 @@ export interface INewDrink {
   tools: string[]
   taste: string
   color: IColor
+  image?: string
 }
 
 export interface ISelectedFilters {
