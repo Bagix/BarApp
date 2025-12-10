@@ -45,11 +45,15 @@ export const useFiltersStore = defineStore('filters', {
     setActiveFilters() {
       const newUrl = new URL(window.location.href)
 
+      // We do not want search param when filters are being set
+      newUrl.searchParams.delete('search')
+
       // Remove filters that have been completely uncheked by user
       this.activeFilters.forEach((previousFilter) => {
         const filterIsDeleted = this.selectedFilters.every(
           (selectedFilter) => selectedFilter.filterName !== previousFilter.filterName,
         )
+
         if (filterIsDeleted) {
           newUrl.searchParams.delete(previousFilter.filterName)
         }

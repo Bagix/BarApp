@@ -9,7 +9,12 @@ const { isDetailsModalVisible, selectedItem } = storeToRefs(store)
 </script>
 
 <template>
-  <Dialog id="details-modal" v-model:visible="isDetailsModalVisible" modal>
+  <Dialog
+    id="details-modal"
+    v-model:visible="isDetailsModalVisible"
+    :class="{ 'has-image': selectedItem?.image }"
+    modal
+  >
     <template #header>
       <p class="title">{{ selectedItem?.name }}</p>
     </template>
@@ -70,7 +75,8 @@ const { isDetailsModalVisible, selectedItem } = storeToRefs(store)
 
   .content {
     padding-top: 16px;
-    width: 100%;
+    min-width: 250px;
+    width: 75vw;
     max-width: 1000px;
 
     @media (min-width: 768px) {
@@ -96,6 +102,10 @@ const { isDetailsModalVisible, selectedItem } = storeToRefs(store)
   }
 
   .text {
+    width: 100%;
+  }
+
+  .has-image .text {
     @media (min-width: 768px) {
       width: 50vw;
     }

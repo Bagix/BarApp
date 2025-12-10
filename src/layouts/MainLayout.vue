@@ -59,7 +59,16 @@ async function prepareItemsSettings() {
 
 onMounted(async () => {
   await prepareItemsSettings()
-  await barStore.getAllItems()
+  const urlParams = new URLSearchParams(window.location.search)
+  const searchPhrase = urlParams.get('search')?.trim() || ''
+
+  if (searchPhrase) {
+    barStore.setSearchPhrase(searchPhrase)
+    await barStore.searchByName()
+  } else {
+    await barStore.getAllItems()
+  }
+
   window.addEventListener('scroll', handleScroll)
   window.addEventListener('resize', prepareItemsSettings)
 })

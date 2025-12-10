@@ -125,7 +125,7 @@ export const useBarStore = defineStore('bar', {
       const formData = new FormData()
       formData.append('file', imageData)
       formData.append('upload_preset', 'bar_app_preset')
-      formData.append('folder', 'vue_uploads')
+      formData.append('folder', 'drinks')
       const uploadURL = `https://api.cloudinary.com/v1_1/${cloundinaryName}/image/upload`
 
       const rawImageData = await fetch(uploadURL, {
@@ -184,18 +184,34 @@ export const useBarStore = defineStore('bar', {
       }
     },
 
-    async searchByName(limit: number = 2) {
+    setSearchPhrase(phrase: string) {
+      this.searchPhrase = phrase
+    },
+
+    async searchByName() {
       if (!this.searchPhrase.trim() || this.isEndOfCollection) {
         return
       }
 
+      const newUrl = new URL(window.location.href)
+      newUrl.search = ''
+
       try {
         this.loadBySearch = true
         this.isLoading = true
-        const data = await Connector.searchItemsByName(this.pagination, limit, this.searchPhrase)
-        this.pagination += limit
+
+        const data = await Connector.searchItemsByName(
+          this.pagination,
+          this.perPage,
+          this.searchPhrase,
+        )
+
+        this.pagination += this.perPage
         this.mainItemsList.push(...data.items)
         this.isEndOfCollection = data.isEndOfCollection
+
+        newUrl.searchParams.set('search', this.searchPhrase.trim())
+        window.history.pushState({}, '', newUrl)
       } catch (e) {
         console.error(`There was a problem in searchByName(): ${e}`)
       } finally {
@@ -207,6 +223,9 @@ export const useBarStore = defineStore('bar', {
       this.pagination = 0
       this.mainItemsList = []
       this.isEndOfCollection = false
+      const newUrl = new URL(window.location.href)
+      newUrl.searchParams.delete('search')
+      window.history.pushState({}, '', newUrl)
     },
 
     resetSearchPhrase() {
