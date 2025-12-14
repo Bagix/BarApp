@@ -2,7 +2,6 @@ import { defineStore } from 'pinia'
 import { Connector } from '@/repositories'
 import type { IDrink, IEditDrink, INewDrink, INewDrinkRaw } from '@/utils/types'
 import { useFiltersStore } from '@/stores/filters'
-import { cloundinaryName } from '@/config'
 
 interface IBarState {
   mainItemsList: IDrink[]
@@ -97,6 +96,11 @@ export const useBarStore = defineStore('bar', {
 
         const ingredients = this.prepareIngredients(data.ingredients)
         const tools = this.prepareTools(data.tools)
+        let imageUrl
+
+        if (data.image) {
+          imageUrl = await Connector.uploadImage(data.image)
+        }
 
         const preparedData: INewDrink = {
           name: data.name,
@@ -109,8 +113,8 @@ export const useBarStore = defineStore('bar', {
           tools,
         }
 
-        if (data.image) {
-          preparedData.image = await this.uploadImage(data.image)
+        if (imageUrl) {
+          preparedData.image = imageUrl.url
         }
 
         await Connector.addItem(preparedData)
@@ -121,26 +125,15 @@ export const useBarStore = defineStore('bar', {
       }
     },
 
-    async uploadImage(imageData: File): Promise<string> {
-      const formData = new FormData()
-      formData.append('file', imageData)
-      formData.append('upload_preset', 'bar_app_preset')
-      formData.append('folder', 'drinks')
-      const uploadURL = `https://api.cloudinary.com/v1_1/${cloundinaryName}/image/upload`
-
-      const rawImageData = await fetch(uploadURL, {
-        method: 'POST',
-        body: formData,
-      })
-
-      const data = await rawImageData.json()
-      return data.secure_url
-    },
-
-    async deleteItem(id: string) {
+    async deleteItem(id: string, imageUrl?: string): Promise<void> {
       try {
         this.isLoadingAdminPanel = true
         const response = await Connector.deleteItem(id)
+
+        if (imageUrl) {
+          const filename = imageUrl.split('/').pop()?.split('.')[0]
+          await Connector.deleteImage(`drinks/${filename!}`) // 'drinks' is the folder name in Cloudinary, it's part of public_id
+        }
 
         if (response.acknowledged) {
           const indextoRemove = this.mainItemsList.findIndex((drink) => drink._id === id)

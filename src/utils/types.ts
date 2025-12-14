@@ -50,6 +50,15 @@ export interface IInsertConfirmation {
   insertedId: string
 }
 
+export interface ICloudinaryUploadResponse {
+  public_id: string
+  url: string
+}
+
+export interface ICloudinaryDeleteResponse {
+  result: string
+}
+
 export interface IDeleteConfirmation {
   acknowledged: boolean
   insertedId: string

@@ -14,7 +14,7 @@ function handleEdit() {
 }
 
 async function deleteItem() {
-  await store.deleteItem(props.drink._id)
+  await store.deleteItem(props.drink._id, props.drink.image)
 }
 
 function handleDelete() {

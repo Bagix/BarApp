@@ -5,6 +5,8 @@ import type {
   IDeleteConfirmation,
   ISelectedFilters,
   IDrinkCollection,
+  ICloudinaryUploadResponse,
+  ICloudinaryDeleteResponse,
 } from '@/utils/types'
 
 export class Connector {
@@ -35,6 +37,20 @@ export class Connector {
     return data
   }
 
+  static async uploadImage(imageData: File): Promise<ICloudinaryUploadResponse> {
+    const uri = `${backendBaseUrl}/api/upload-image`
+    const formData = new FormData()
+    formData.append('image', imageData)
+
+    const response = await fetch(uri, {
+      method: 'POST',
+      body: formData,
+    })
+
+    const result = await response.json()
+    return result
+  }
+
   static async editItem(item: INewDrink): Promise<void> {
     const uri = `${backendBaseUrl}/api/edit`
     const response = await fetch(uri, {
@@ -53,6 +69,20 @@ export class Connector {
     const response = await fetch(uri, {
       method: 'DELETE',
       body: JSON.stringify({ id }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+
+    const data = await response.json()
+    return data
+  }
+
+  static async deleteImage(publicId: string): Promise<ICloudinaryDeleteResponse> {
+    const uri = `${backendBaseUrl}/api/delete-image`
+    const response = await fetch(uri, {
+      method: 'DELETE',
+      body: JSON.stringify({ public_id: publicId }),
       headers: {
         'Content-Type': 'application/json',
       },

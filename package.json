@@ -14,8 +14,6 @@
     "myserv": "nodemon ./src/backend/server.js"
   },
   "dependencies": {
-    "@cloudinary/url-gen": "^1.22.0",
-    "@cloudinary/vue": "^1.13.3",
     "@primeuix/themes": "^1.1.1",
     "firebase": "^12.3.0",
     "pinia": "^3.0.1",
