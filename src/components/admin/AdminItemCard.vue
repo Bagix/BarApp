@@ -2,11 +2,12 @@
 import ItemCard from '@/components/ItemCard.vue'
 import { useConfirm } from 'primevue/useconfirm'
 import { useBarStore } from '@/stores/bar'
+import type { IDrink } from '@/utils/types'
 
 const store = useBarStore()
 const confirm = useConfirm()
 
-const props = defineProps(['drink'])
+const props = defineProps<{ drink: IDrink }>()
 
 function handleEdit() {
   store.setDrinkToEdit(props.drink._id)
@@ -14,7 +15,7 @@ function handleEdit() {
 }
 
 async function deleteItem() {
-  await store.deleteItem(props.drink._id, props.drink.image)
+  await store.deleteItem(props.drink._id)
 }
 
 function handleDelete() {

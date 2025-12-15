@@ -12,7 +12,6 @@ import router from '@/router'
 
 const store = useBarStore()
 const { mainItemsList } = storeToRefs(store)
-
 const isOpen = ref(false)
 
 function handleToggle() {

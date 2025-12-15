@@ -3,9 +3,23 @@ import Dialog from 'primevue/dialog'
 import Badge from 'primevue/badge'
 import { useBarStore } from '@/stores/bar'
 import { storeToRefs } from 'pinia'
+import { computed } from 'vue'
+import { Cloudinary } from '@cloudinary/url-gen'
 
 const store = useBarStore()
 const { isDetailsModalVisible, selectedItem } = storeToRefs(store)
+
+const imageSrc = computed((): string => {
+  if (!selectedItem.value?.image) {
+    return ''
+  }
+
+  const cld = new Cloudinary({
+    cloud: { cloudName: import.meta.env.VITE_CLOUNDINARY_NAME },
+  })
+
+  return cld.image(selectedItem.value.image).toURL()
+})
 </script>
 
 <template>
@@ -19,8 +33,8 @@ const { isDetailsModalVisible, selectedItem } = storeToRefs(store)
       <p class="title">{{ selectedItem?.name }}</p>
     </template>
     <div class="content">
-      <div v-if="selectedItem?.image" class="image-box">
-        <img :src="selectedItem?.image" :alt="selectedItem?.name" />
+      <div v-if="imageSrc" class="image-box">
+        <img :src="imageSrc" :alt="selectedItem?.name" />
       </div>
       <div class="text">
         <p class="description">{{ selectedItem?.description }}</p>

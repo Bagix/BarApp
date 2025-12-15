@@ -64,6 +64,19 @@ export class Connector {
     await response.json()
   }
 
+  static async editImage(oldImageId: string, imageData: File): Promise<void> {
+    console.log('Editing image...')
+    const uri = `${backendBaseUrl}/api/edit-image`
+    const formData = new FormData()
+    formData.append('image', imageData)
+    formData.append('public_id', oldImageId)
+
+    await fetch(uri, {
+      method: 'POST',
+      body: formData,
+    })
+  }
+
   static async deleteItem(id: string): Promise<IDeleteConfirmation> {
     const uri = `${backendBaseUrl}/api/delete`
     const response = await fetch(uri, {

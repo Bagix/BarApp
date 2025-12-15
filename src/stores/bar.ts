@@ -114,7 +114,7 @@ export const useBarStore = defineStore('bar', {
         }
 
         if (imageUrl) {
-          preparedData.image = imageUrl.url
+          preparedData.image = imageUrl.public_id
         }
 
         await Connector.addItem(preparedData)
@@ -125,14 +125,14 @@ export const useBarStore = defineStore('bar', {
       }
     },
 
-    async deleteItem(id: string, imageUrl?: string): Promise<void> {
+    async deleteItem(id: string): Promise<void> {
       try {
         this.isLoadingAdminPanel = true
         const response = await Connector.deleteItem(id)
+        const imageId = this.mainItemsList.find((drink) => drink._id === id)?.image
 
-        if (imageUrl) {
-          const filename = imageUrl.split('/').pop()?.split('.')[0]
-          await Connector.deleteImage(`drinks/${filename!}`) // 'drinks' is the folder name in Cloudinary, it's part of public_id
+        if (imageId) {
+          await Connector.deleteImage(imageId)
         }
 
         if (response.acknowledged) {
@@ -146,7 +146,7 @@ export const useBarStore = defineStore('bar', {
       }
     },
 
-    async editDrink() {
+    async editDrink(newImage: File | null) {
       try {
         if (!this.drinkToEdit) {
           return
@@ -157,19 +157,29 @@ export const useBarStore = defineStore('bar', {
         const ingredients = this.prepareIngredients(this.drinkToEdit.ingredients)
         const tools = this.prepareTools(this.drinkToEdit.tools)
 
-        const preparedData = {
-          id: this.drinkToEdit._id,
+        const preparedData: IDrink = {
+          _id: this.drinkToEdit._id,
           name: this.drinkToEdit.name,
           baseAlcohol: this.drinkToEdit.baseAlcohol,
           description: this.drinkToEdit.description,
           preparation: this.drinkToEdit.preparation,
-          color: this.drinkToEdit.color!,
+          color: this.drinkToEdit.color,
           taste: this.drinkToEdit.taste,
           ingredients,
           tools,
         }
 
-        await Connector.editItem(preparedData)
+        if (!this.drinkToEdit.image && newImage) {
+          const uploadResult = await Connector.uploadImage(newImage)
+          preparedData.image = uploadResult.public_id
+        }
+
+        const isImageToEdit = this.drinkToEdit.image && newImage
+
+        await Promise.all([
+          Connector.editItem(preparedData),
+          isImageToEdit ? Connector.editImage(this.drinkToEdit.image!, newImage) : undefined,
+        ])
       } catch (e) {
         console.error(`There was a problem in editDrink(): ${e}`)
       } finally {
@@ -248,6 +258,7 @@ export const useBarStore = defineStore('bar', {
         tools,
         taste: selectedDrink.taste,
         color: selectedDrink.color,
+        image: selectedDrink.image ?? '',
       }
     },
 

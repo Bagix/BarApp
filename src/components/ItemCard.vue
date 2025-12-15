@@ -3,6 +3,7 @@ import Card from 'primevue/card'
 import Badge from 'primevue/badge'
 import type { IDrink } from '@/utils/types'
 import { computed } from 'vue'
+import { Cloudinary } from '@cloudinary/url-gen'
 
 const props = defineProps<{ drink: IDrink }>()
 const emits = defineEmits(['click'])
@@ -15,8 +16,14 @@ const style = computed(() => {
     return {}
   }
 
+  const cld = new Cloudinary({
+    cloud: { cloudName: import.meta.env.VITE_CLOUNDINARY_NAME },
+  })
+
+  const imageUrl = cld.image(props.drink.image).toURL()
+
   return {
-    backgroundImage: `url(${props.drink.image})`,
+    backgroundImage: `url(${imageUrl})`,
   }
 })
 

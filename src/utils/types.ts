@@ -2,19 +2,16 @@ export interface IDrink extends INewDrink {
   _id: string
 }
 
-export interface IEditDrink extends INewDrinkRaw {
+export interface IEditDrink extends IBaseDrink {
   _id: string
-}
-
-export interface INewDrinkRaw {
-  name: string
-  baseAlcohol: string
-  description: string
-  preparation: string
   ingredients: string
   tools: string
-  taste: string
-  color: IColor | null
+  image?: string
+}
+
+export interface INewDrinkRaw extends IBaseDrink {
+  ingredients: string
+  tools: string
   image?: File
 }
 
@@ -23,16 +20,19 @@ export interface IColor {
   value: string
 }
 
-export interface INewDrink {
-  name: string
-  description: string
-  baseAlcohol: string
-  preparation: string
+export interface INewDrink extends IBaseDrink {
   ingredients: IIngredient[]
   tools: string[]
+  image?: string
+}
+
+export interface IBaseDrink {
+  name: string
+  baseAlcohol: string
+  description: string
+  preparation: string
   taste: string
   color: IColor
-  image?: string
 }
 
 export interface ISelectedFilters {

@@ -3,15 +3,34 @@ import FloatLabel from 'primevue/floatlabel'
 import InputText from 'primevue/inputtext'
 import Textarea from 'primevue/textarea'
 import Select from 'primevue/select'
+import FileUpload from 'primevue/fileupload'
 import { useBarStore } from '@/stores/bar'
 import { colors, flavors, baseAlcohols } from '@/utils/types'
 import { storeToRefs } from 'pinia'
+import { computed, useTemplateRef } from 'vue'
+import { Cloudinary } from '@cloudinary/url-gen'
 
 const store = useBarStore()
 const { isLoadingAdminPanel, drinkToEdit } = storeToRefs(store)
+const fileUpload = useTemplateRef<HTMLInputElement>('fileupload')
+
+const imageSrc = computed((): string => {
+  if (!drinkToEdit.value?.image) {
+    return ''
+  }
+
+  const cld = new Cloudinary({
+    cloud: { cloudName: import.meta.env.VITE_CLOUNDINARY_NAME },
+  })
+
+  return cld.image(drinkToEdit.value.image).toURL()
+})
 
 async function handleSubmit(): Promise<void> {
-  await store.editDrink()
+  console.log('submit edit')
+
+  const image = fileUpload?.value?.files?.[0] ?? null
+  await store.editDrink(image)
 }
 </script>
 
@@ -61,6 +80,16 @@ async function handleSubmit(): Promise<void> {
     </div>
 
     <div class="column">
+      <div class="image-wrapper">
+        <FileUpload ref="fileupload" mode="basic" name="demo[]" accept="image/*" customUpload />
+        <div v-if="imageSrc" class="current-image">
+          <span>Obecny obrazek</span>
+          <div class="thumb">
+            <img :src="imageSrc" :alt="drinkToEdit.name" />
+          </div>
+        </div>
+      </div>
+
       <FloatLabel variant="on" class="textarea-element">
         <Textarea
           id="description"
@@ -133,6 +162,24 @@ async function handleSubmit(): Promise<void> {
   @media (min-width: 1024px) {
     grid-column-start: bottomLeft;
     grid-column-end: bottomRight;
+  }
+}
+
+.image-wrapper {
+  display: flex;
+  justify-content: space-between;
+
+  &:deep(.p-fileupload) {
+    display: flex;
+  }
+}
+
+.thumb {
+  width: 100px;
+
+  img {
+    width: 100%;
+    height: auto;
   }
 }
 </style>

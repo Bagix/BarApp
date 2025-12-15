@@ -21,7 +21,7 @@ const formModel: INewDrinkRaw = {
   ingredients: '',
   tools: '',
   taste: '',
-  color: null,
+  color: { label: '', value: '' },
 }
 
 async function handleSubmit(): Promise<void> {
