@@ -57,6 +57,7 @@ const imageSrc = computed((): string => {
         <div class="badge-wrapper">
           <Badge :value="selectedItem?.taste" severity="secondary" class="taste-badge" />
           <Badge
+            v-if="selectedItem?.color"
             :value="selectedItem?.color.label"
             :style="{ background: selectedItem?.color.value }"
             class="color-badge"

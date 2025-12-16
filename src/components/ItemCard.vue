@@ -67,6 +67,7 @@ function handleClick() {
         <div class="badge-wrapper">
           <Badge :value="props.drink.taste" severity="secondary" class="taste-badge" />
           <Badge
+            v-if="props.drink.color"
             :value="props.drink.color.label"
             :style="{ background: props.drink.color.value }"
             class="color-badge"
