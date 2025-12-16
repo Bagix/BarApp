@@ -107,7 +107,7 @@ export const useBarStore = defineStore('bar', {
           baseAlcohol: data.baseAlcohol,
           description: data.description,
           preparation: data.preparation,
-          color: data.color!,
+          color: data.color,
           taste: data.taste,
           ingredients,
           tools,

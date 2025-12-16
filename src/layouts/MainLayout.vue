@@ -6,6 +6,7 @@ import { useFiltersStore } from '@/stores/filters'
 import { onMounted, ref, useTemplateRef } from 'vue'
 import { useBarStore } from '@/stores/bar'
 import { storeToRefs } from 'pinia'
+import Toast from 'primevue/toast'
 
 const barStore = useBarStore()
 const { loadBySearch, mainItemsList } = storeToRefs(barStore)
@@ -76,6 +77,7 @@ onMounted(async () => {
 
 <template>
   <div class="main-container">
+    <Toast />
     <FiltersWrapper class="filters" />
 
     <main class="content">

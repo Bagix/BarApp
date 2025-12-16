@@ -9,10 +9,12 @@ import { colors, flavors, baseAlcohols } from '@/utils/types'
 import { storeToRefs } from 'pinia'
 import { computed, useTemplateRef } from 'vue'
 import { Cloudinary } from '@cloudinary/url-gen'
+import { useToast } from 'primevue/usetoast'
 
 const store = useBarStore()
 const { isLoadingAdminPanel, drinkToEdit } = storeToRefs(store)
 const fileUpload = useTemplateRef<HTMLInputElement>('fileupload')
+const toast = useToast()
 
 const imageSrc = computed((): string => {
   if (!drinkToEdit.value?.image) {
@@ -27,10 +29,25 @@ const imageSrc = computed((): string => {
 })
 
 async function handleSubmit(): Promise<void> {
-  console.log('submit edit')
+  try {
+    const image = fileUpload?.value?.files?.[0] ?? null
+    await store.editDrink(image)
+    toast.add({
+      severity: 'success',
+      summary: 'Sukces',
+      detail: 'Zmiany zostały zapisane.',
+      life: 3000,
+    })
 
-  const image = fileUpload?.value?.files?.[0] ?? null
-  await store.editDrink(image)
+    store.setEditModalVisibility(false)
+  } catch (error) {
+    toast.add({
+      severity: 'error',
+      summary: 'Błąd',
+      detail: `Wystąpił błąd podczas zapisywania zmian. ${error}`,
+      life: 3000,
+    })
+  }
 }
 </script>
 

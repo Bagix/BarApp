@@ -12,7 +12,6 @@ const user = ref({
 })
 
 function handleSubmit() {
-  console.log('asdadasd', user.value)
   emit('submit', { ...user.value })
 }
 

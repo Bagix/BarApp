@@ -7,13 +7,16 @@ import FileUpload from 'primevue/fileupload'
 import { useBarStore } from '@/stores/bar'
 import { colors, type INewDrinkRaw, flavors, baseAlcohols } from '@/utils/types'
 import { storeToRefs } from 'pinia'
-import { useTemplateRef } from 'vue'
+import { reactive, ref } from 'vue'
+import { useToast } from 'primevue/usetoast'
 
 const store = useBarStore()
 const { isLoadingAdminPanel } = storeToRefs(store)
-const fileUpload = useTemplateRef<HTMLInputElement>('fileupload')
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const fileUpload = ref<any>(null)
+const toast = useToast()
 
-const formModel: INewDrinkRaw = {
+const emptyModel: INewDrinkRaw = {
   name: '',
   baseAlcohol: '',
   description: '',
@@ -21,17 +24,41 @@ const formModel: INewDrinkRaw = {
   ingredients: '',
   tools: '',
   taste: '',
-  color: { label: '', value: '' },
+  color: null,
 }
 
+const formModel = reactive<INewDrinkRaw>({ ...emptyModel })
+
 async function handleSubmit(): Promise<void> {
-  const image = fileUpload?.value?.files?.[0]
+  try {
+    const image = fileUpload?.value?.files?.[0]
 
-  if (image) {
-    formModel.image = image
+    if (image) {
+      formModel.image = image
+    }
+
+    await store.addDrink(formModel)
+
+    toast.add({
+      severity: 'success',
+      summary: 'Sukces',
+      detail: 'Nowy drink został dodany.',
+      life: 3000,
+    })
+
+    Object.assign(formModel, emptyModel)
+
+    if (image) {
+      fileUpload.value.remove()
+    }
+  } catch (error) {
+    toast.add({
+      severity: 'error',
+      summary: 'Błąd',
+      detail: `Wystąpił błąd podczas dodawania nowego drinka. ${error}`,
+      life: 3000,
+    })
   }
-
-  await store.addDrink(formModel)
 }
 </script>
 
@@ -64,16 +91,16 @@ async function handleSubmit(): Promise<void> {
       <Select v-model="formModel.color" :options="colors" placeholder="Kolor">
         <template #value="slotProps">
           <div v-if="slotProps.value">
-            <!-- <span class="color-ball" :style="'background': slotProps.value.value" /> -->
-            <div>{{ slotProps.value.label }}</div>
+            <div class="option-wrapper">
+              <div class="color-ball" :style="{ 'background-color': slotProps.value.value }" />
+              <div>{{ slotProps.value.label }}</div>
+            </div>
           </div>
-          <span v-else>
-            {{ slotProps.placeholder }}
-          </span>
+          <span v-else> {{ slotProps.placeholder }} </span>
         </template>
         <template #option="slotProps">
-          <div class="flex items-center">
-            <span class="color-ball" />
+          <div class="option-wrapper">
+            <div class="color-ball" :style="{ 'background-color': slotProps.option.value }" />
             <div>{{ slotProps.option.label }}</div>
           </div>
         </template>
@@ -81,7 +108,14 @@ async function handleSubmit(): Promise<void> {
     </div>
 
     <div class="column">
-      <FileUpload ref="fileupload" mode="basic" name="demo[]" accept="image/*" customUpload />
+      <FileUpload
+        ref="fileUpload"
+        mode="basic"
+        name="demo[]"
+        accept="image/*"
+        customUpload
+        chooseLabel="Wybierz obrazek (opcjonalne)"
+      />
 
       <FloatLabel variant="on" class="textarea-element">
         <Textarea id="description" v-model="formModel.description" style="resize: none" required />
@@ -151,5 +185,17 @@ async function handleSubmit(): Promise<void> {
     grid-column-start: bottomLeft;
     grid-column-end: bottomRight;
   }
+}
+
+.color-ball {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.option-wrapper {
+  display: flex;
+  align-items: center;
 }
 </style>

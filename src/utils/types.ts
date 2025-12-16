@@ -32,7 +32,7 @@ export interface IBaseDrink {
   description: string
   preparation: string
   taste: string
-  color: IColor
+  color: IColor | null
 }
 
 export interface ISelectedFilters {

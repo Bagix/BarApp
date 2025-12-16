@@ -65,7 +65,6 @@ export class Connector {
   }
 
   static async editImage(oldImageId: string, imageData: File): Promise<void> {
-    console.log('Editing image...')
     const uri = `${backendBaseUrl}/api/edit-image`
     const formData = new FormData()
     formData.append('image', imageData)
