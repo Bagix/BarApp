@@ -96,7 +96,7 @@ const imageSrc = computed((): string => {
     padding-top: 16px;
     min-width: 250px;
     width: 75vw;
-    max-width: 1000px;
+    max-width: 800px;
     font-size: 16px;
 
     @media (min-width: 768px) {
