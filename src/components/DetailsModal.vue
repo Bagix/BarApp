@@ -30,36 +30,36 @@ const imageSrc = computed((): string => {
     modal
   >
     <template #header>
-      <p class="title">{{ selectedItem?.name }}</p>
+      <p v-if="selectedItem" class="title">{{ selectedItem.name }}</p>
     </template>
-    <div class="content">
+    <div v-if="selectedItem" class="content">
       <div v-if="imageSrc" class="image-box">
-        <img :src="imageSrc" :alt="selectedItem?.name" />
+        <img :src="imageSrc" :alt="selectedItem.name" />
       </div>
       <div class="text">
-        <p class="description">{{ selectedItem?.description }}</p>
+        <p class="description">{{ selectedItem.description }}</p>
         <div class="tools">
-          <span>Przybory:</span>
-          <ul class="tools-list">
-            <li v-for="tool in selectedItem?.tools" :key="tool">
-              {{ tool }}
-            </li>
-          </ul>
+          <strong class="label">Przybory:</strong>
+          <span>{{ selectedItem.tools }}</span>
         </div>
 
         <ul class="ingredients">
-          <li v-for="ingredient in selectedItem?.ingredients" :key="ingredient.type">
-            {{ ingredient.amount }} {{ ingredient.type }}
+          <li v-for="ingredient in selectedItem.ingredients" :key="ingredient">
+            {{ ingredient }}
           </li>
         </ul>
-        <p class="prep">{{ selectedItem?.preparation }}</p>
+        <div v-if="selectedItem.decoration" class="decoration">
+          <strong>Dekoracja: </strong>
+          <span>{{ selectedItem.decoration }}</span>
+        </div>
+        <p class="prep">{{ selectedItem.preparation }}</p>
 
         <div class="badge-wrapper">
-          <Badge :value="selectedItem?.taste" severity="secondary" class="taste-badge" />
+          <Badge :value="selectedItem.taste" severity="secondary" class="taste-badge" />
           <Badge
-            v-if="selectedItem?.color"
-            :value="selectedItem?.color.label"
-            :style="{ background: selectedItem?.color.value }"
+            v-if="selectedItem.color"
+            :value="selectedItem.color.label"
+            :style="{ background: selectedItem.color.value }"
             class="color-badge"
           />
         </div>
@@ -85,6 +85,10 @@ const imageSrc = computed((): string => {
       @media (min-width: 768px) {
         font-size: 24px;
       }
+
+      &::first-letter {
+        text-transform: capitalize;
+      }
     }
   }
 
@@ -93,6 +97,7 @@ const imageSrc = computed((): string => {
     min-width: 250px;
     width: 75vw;
     max-width: 1000px;
+    font-size: 16px;
 
     @media (min-width: 768px) {
       display: flex;
@@ -139,7 +144,7 @@ const imageSrc = computed((): string => {
   .tools {
     display: flex;
 
-    & span {
+    & .label {
       margin-right: 5px;
     }
   }
@@ -187,6 +192,23 @@ const imageSrc = computed((): string => {
     margin-top: 32px;
     padding-top: 16px;
     border-top: 1px dashed #fff;
+  }
+
+  .taste-badge,
+  .color-badge {
+    font-size: 14px;
+  }
+
+  .taste-badge {
+    background: #393e46;
+  }
+
+  .color-badge {
+    color: #fff;
+  }
+
+  .decoration {
+    margin-bottom: 32px;
   }
 }
 </style>

@@ -95,7 +95,7 @@ export const useBarStore = defineStore('bar', {
         this.isLoadingAdminPanel = true
 
         const ingredients = this.prepareIngredients(data.ingredients)
-        const tools = this.prepareTools(data.tools)
+        // const tools = this.prepareTools(data.tools)
         let imageUrl
 
         if (data.image) {
@@ -109,8 +109,9 @@ export const useBarStore = defineStore('bar', {
           preparation: data.preparation,
           color: data.color,
           taste: data.taste,
+          decoration: data.decoration,
           ingredients,
-          tools,
+          tools: data.tools,
         }
 
         if (imageUrl) {
@@ -155,7 +156,7 @@ export const useBarStore = defineStore('bar', {
         this.isLoadingAdminPanel = true
 
         const ingredients = this.prepareIngredients(this.drinkToEdit.ingredients)
-        const tools = this.prepareTools(this.drinkToEdit.tools)
+        // const tools = this.prepareTools(this.drinkToEdit.tools)
 
         const preparedData: IDrink = {
           _id: this.drinkToEdit._id,
@@ -165,8 +166,9 @@ export const useBarStore = defineStore('bar', {
           preparation: this.drinkToEdit.preparation,
           color: this.drinkToEdit.color,
           taste: this.drinkToEdit.taste,
+          decoration: this.drinkToEdit.decoration,
           ingredients,
-          tools,
+          tools: this.drinkToEdit.tools,
         }
 
         if (!this.drinkToEdit.image && newImage) {
@@ -243,9 +245,9 @@ export const useBarStore = defineStore('bar', {
         return
       }
 
-      const tools = selectedDrink!.tools.join(', ')
+      // const tools = selectedDrink!.tools.join(', ')
       const ingredients = selectedDrink!.ingredients
-        .map((el) => `${el.amount} ${el.type}`)
+        // .map((el) => `${el.amount} ${el.type}`)
         .join(', ')
 
       this.drinkToEdit = {
@@ -255,7 +257,8 @@ export const useBarStore = defineStore('bar', {
         description: selectedDrink.description,
         preparation: selectedDrink.preparation,
         ingredients,
-        tools,
+        tools: selectedDrink.tools,
+        decoration: selectedDrink.decoration,
         taste: selectedDrink.taste,
         color: selectedDrink.color,
         image: selectedDrink.image ?? '',
@@ -279,13 +282,15 @@ export const useBarStore = defineStore('bar', {
         .trim()
         .split(',')
         .filter((el) => el.trim() !== '')
-        .map((ingredient) => {
-          const ingredientParts = ingredient.trim().split(' ')
-          return {
-            amount: ingredientParts[0],
-            type: ingredientParts[1],
-          }
-        })
+      // .map((ingredient) => {
+      //   const ingredientParts = ingredient.trim().split(' ')
+      //   const type = ingredientParts.pop() ?? ''
+
+      //   return {
+      //     amount: ingredientParts.join(' '),
+      //     type,
+      //   }
+      // })
     },
 
     openDetailsModal(item: IDrink) {

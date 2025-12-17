@@ -5,13 +5,11 @@ export interface IDrink extends INewDrink {
 export interface IEditDrink extends IBaseDrink {
   _id: string
   ingredients: string
-  tools: string
   image?: string
 }
 
 export interface INewDrinkRaw extends IBaseDrink {
   ingredients: string
-  tools: string
   image?: File
 }
 
@@ -21,8 +19,7 @@ export interface IColor {
 }
 
 export interface INewDrink extends IBaseDrink {
-  ingredients: IIngredient[]
-  tools: string[]
+  ingredients: string[]
   image?: string
 }
 
@@ -32,6 +29,8 @@ export interface IBaseDrink {
   description: string
   preparation: string
   taste: string
+  tools: string
+  decoration?: string
   color: IColor | null
 }
 

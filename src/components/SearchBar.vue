@@ -41,7 +41,7 @@ async function handleReset() {
             @keyup.enter="handleSearch"
           />
         </IconField>
-        <label for="search">Wyszkuj po nazwie</label>
+        <label for="search">Wyszukaj po nazwie</label>
       </FloatLabel>
       <UIButton icon="pi pi-search" :disabled="isLoading || !searchPhrase" @click="handleSearch" />
     </div>

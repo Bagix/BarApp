@@ -50,19 +50,19 @@ function handleClick() {
       <template #content>
         <p class="description">{{ props.drink.description }}</p>
         <div class="tools">
-          <span>Przybory:</span>
-          <ul class="tools-list">
-            <li v-for="tool in tools" :key="tool">
-              {{ tool }}
-            </li>
-          </ul>
+          <strong class="label">Przybory: </strong>
+          <span>{{ tools }}</span>
         </div>
 
         <ul class="ingredients">
-          <li v-for="ingredient in ingredients" :key="ingredient.type">
-            {{ ingredient.amount }} {{ ingredient.type }}
+          <li v-for="ingredient in ingredients" :key="ingredient">
+            {{ ingredient }}
           </li>
         </ul>
+        <div class="decoration">
+          <strong>Dekoracja: </strong>
+          <span>{{ props.drink.decoration }}</span>
+        </div>
         <p class="prep">{{ props.drink.preparation }}</p>
         <div class="badge-wrapper">
           <Badge :value="props.drink.taste" severity="secondary" class="taste-badge" />
@@ -160,7 +160,7 @@ function handleClick() {
   margin-top: 24px;
   display: flex;
 
-  & span {
+  & .label {
     margin-right: 5px;
   }
 }
@@ -201,6 +201,10 @@ function handleClick() {
   }
 }
 
+.decoration {
+  margin-bottom: 24px;
+}
+
 .prep {
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -208,6 +212,11 @@ function handleClick() {
   overflow: hidden;
   text-overflow: ellipsis;
   text-align: center;
+}
+
+.taste-badge,
+.color-badge {
+  font-size: 14px;
 }
 
 .taste-badge {
