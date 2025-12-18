@@ -205,8 +205,10 @@ const imageSrc = computed((): string => {
   }
 
   .taste-badge,
-  .color-badge {
+  .color-badge,
+  .non-alcoholic-badge {
     font-size: 14px;
+    font-weight: 500;
   }
 
   .taste-badge {
