@@ -68,7 +68,7 @@ export interface IDrinkCollection {
   isEndOfCollection: boolean
 }
 
-export const baseAlcohols = ['Whisky', 'Rum', 'Wódka', 'Gin', 'Likier']
+export const baseAlcohols = ['Whisky', 'Rum', 'Wódka', 'Gin', 'Likier', 'Bezalkoholowy']
 
 export const flavors = ['Słodki', 'Kwaśny', 'Słodko-kwaśny', 'Wytrawny', 'Orzeźwiający']
 

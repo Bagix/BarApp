@@ -62,6 +62,11 @@ const imageSrc = computed((): string => {
             :style="{ background: selectedItem.color.value }"
             class="color-badge"
           />
+          <Badge
+            v-if="selectedItem.baseAlcohol === 'Bezalkoholowy'"
+            :value="selectedItem.baseAlcohol"
+            class="non-alcoholic-badge"
+          />
         </div>
       </div>
     </div>
@@ -104,6 +109,10 @@ const imageSrc = computed((): string => {
       flex-direction: row-reverse;
       gap: 64px;
     }
+  }
+
+  &.has-image .content {
+    max-width: 1000px;
   }
 
   .image-box {
@@ -188,6 +197,7 @@ const imageSrc = computed((): string => {
   .badge-wrapper {
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
     gap: 12px;
     margin-top: 32px;
     padding-top: 16px;
@@ -205,6 +215,10 @@ const imageSrc = computed((): string => {
 
   .color-badge {
     color: #fff;
+  }
+
+  .non-alcoholic-badge {
+    background: #33c1da;
   }
 
   .decoration {

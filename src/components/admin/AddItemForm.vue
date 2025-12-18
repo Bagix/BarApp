@@ -23,6 +23,7 @@ const emptyModel: INewDrinkRaw = {
   preparation: '',
   ingredients: '',
   tools: '',
+  decoration: '',
   taste: '',
   color: null,
 }

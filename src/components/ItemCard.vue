@@ -65,12 +65,17 @@ function handleClick() {
         </div>
         <p class="prep">{{ props.drink.preparation }}</p>
         <div class="badge-wrapper">
-          <Badge :value="props.drink.taste" severity="secondary" class="taste-badge" />
+          <Badge :value="props.drink.taste" class="taste-badge" />
           <Badge
             v-if="props.drink.color"
             :value="props.drink.color.label"
             :style="{ background: props.drink.color.value }"
             class="color-badge"
+          />
+          <Badge
+            v-if="props.drink.baseAlcohol === 'Bezalkoholowy'"
+            :value="props.drink.baseAlcohol"
+            class="non-alcoholic-badge"
           />
         </div>
       </template>
@@ -128,6 +133,7 @@ function handleClick() {
 .badge-wrapper {
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
   gap: 12px;
   margin-top: 32px;
   padding-top: 16px;
@@ -215,15 +221,22 @@ function handleClick() {
 }
 
 .taste-badge,
-.color-badge {
+.color-badge,
+.non-alcoholic-badge {
   font-size: 14px;
+  font-weight: 500;
 }
 
 .taste-badge {
   background: #393e46;
+  color: #fff;
 }
 
 .color-badge {
   color: #fff;
+}
+
+.non-alcoholic-badge {
+  background: #33c1da;
 }
 </style>
