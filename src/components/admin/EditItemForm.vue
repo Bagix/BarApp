@@ -69,6 +69,11 @@ async function handleSubmit(): Promise<void> {
         <label for="tools">Przybory</label>
       </FloatLabel>
 
+      <FloatLabel class="input-element" variant="on">
+        <InputText id="tools" v-model="drinkToEdit.decoration" autocomplete="off" required />
+        <label for="tools">Dekoracja</label>
+      </FloatLabel>
+
       <Select
         v-model="drinkToEdit.baseAlcohol"
         :options="baseAlcohols"
